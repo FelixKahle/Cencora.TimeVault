@@ -1,4 +1,8 @@
-﻿**/.dockerignore
+﻿# Copyright © 2024 Cencora. All rights reserved.
+#
+# Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
+
+**/.dockerignore
 **/.env
 **/.git
 **/.gitignore

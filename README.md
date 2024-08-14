@@ -2,7 +2,7 @@
 
 Welcome to the Timevault repository! This project contains the source code for the Timevault service, an advanced tool developed for Cencora to handle and manage timezone information with precision and efficiency. Timevault is specifically designed to address the complexities of time and date management across different geographical locations, making it an invaluable resource for applications that require accurate and reliable timezone conversions.
 
-## What is Timevault?
+## What is TimeVault?
 
 Timevault is a sophisticated service tailored to store, manage, and retrieve timezone data for specific locations or geographical coordinates. By leveraging this service, applications can seamlessly perform accurate time translations between various timezones, which is crucial for global scheduling, event management, and time-sensitive operations.
 
