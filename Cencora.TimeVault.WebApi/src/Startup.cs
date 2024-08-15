@@ -33,6 +33,7 @@ public sealed class Startup
     /// <param name="services">The collection of services to configure.</param>
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddCustomLogging();
         services.AddControllers();
         services.AddProblemDetails();
         services.ConfigureJsonOptions(options =>
@@ -66,6 +67,7 @@ public sealed class Startup
         app.UseExceptionHandler();
         app.UseStatusCodePages();
         app.UseHttpsRedirection();
+        app.UseHttpLogging();
         app.UseRouting();
         app.UseEndpoints(endpoints =>
         {

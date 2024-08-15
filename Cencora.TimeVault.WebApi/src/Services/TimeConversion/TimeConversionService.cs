@@ -30,6 +30,8 @@ public class TimeConversionService : ITimeConversionService
     /// <param name="logger">The logger.</param>
     public TimeConversionService(ILogger<TimeConversionService> logger)
     {
+        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+
         _logger = logger;
     }
 
@@ -39,19 +41,6 @@ public class TimeConversionService : ITimeConversionService
         var time = input.OriginTime;
         var originTimeZone = input.OriginTimeZone;
         var targetTimeZone = input.TargetTimeZone;
-        
-        // In case the two timezones are equal,
-        // we do not need to perform any conversion.
-        if (originTimeZone.Equals(targetTimeZone))
-        {
-            return new TimeConversionResult
-            {
-                ConvertedTime = time,
-                OriginTime = time,
-                OriginTimeZone = originTimeZone,
-                TargetTimeZone = targetTimeZone
-            };
-        }
 
         // Perform the time conversion.
         var convertedTime = TimeZoneInfo.ConvertTime(time, originTimeZone, targetTimeZone);

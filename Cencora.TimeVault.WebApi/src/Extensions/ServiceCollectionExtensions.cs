@@ -30,4 +30,26 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Adds the custom logging configuration to the specified collection of services.
+    /// </summary>
+    /// <param name="services">The collection of services to configure.</param>
+    /// <returns>The collection of services.</returns>
+    public static IServiceCollection AddCustomLogging(this IServiceCollection services)
+    {
+        services.AddLogging(builder =>
+        {
+            builder.Configure(options =>
+            {
+                options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId
+                                                | ActivityTrackingOptions.TraceId
+                                                | ActivityTrackingOptions.ParentId
+                                                | ActivityTrackingOptions.Baggage
+                                                | ActivityTrackingOptions.Tags;
+            });
+        });
+
+        return services;
+    }
 }
