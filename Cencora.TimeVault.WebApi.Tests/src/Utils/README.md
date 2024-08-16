@@ -7,7 +7,7 @@ This utility library provides a custom implementation of ILogger<T> that writes 
 ## Key Features
 
 - **Seamless Integration with xUnit**: The utility bridges the gap between the Microsoft logging framework and xUnit's ITestOutputHelper, enabling you to easily capture log output within your unit tests.
-- **lexible Logger Creation**: Create a logger instance for your tests by calling the BuildLoggerFor<TLogger>() extension method on ITestOutputHelper. This allows you to inject a logger into the classes you're testing, making it easy to verify log messages or simply observe logging behavior.
+- **Flexible Logger Creation**: Create a logger instance for your tests by calling the BuildLoggerFor<TLogger>() extension method on ITestOutputHelper. This allows you to inject a logger into the classes you're testing, making it easy to verify log messages or simply observe logging behavior.
 - **Convenient Base Class**: For a more streamlined experience, you can extend your test class from TestLoggerBase<TLogger>. This base class automatically provides access to an ILogger<TLogger> instance, reducing boilerplate code and making your test setup cleaner and more maintainable.
 
 ## Creating a Logger

@@ -10,8 +10,22 @@ namespace Cencora.TimeVault.WebApi.Tests.Utils;
 /// <summary>
 /// Extension methods for <see cref="ILogger{T}"/>.
 /// </summary>
-public static class ILoggerExtensions
+public static class LoggerExtensions
 {
+    /// <summary>
+    /// Creates an instance of an XUnit logger for the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type to create the logger for.</typeparam>
+    /// <param name="output">The test output helper to write log messages to.</param>
+    /// <param name="name">The name of the logger.</param>
+    /// <param name="formatter">The formatter to use for log messages.</param>
+    /// <param name="scopeProvider">The scope provider to use for log messages.</param>
+    /// <returns>An instance of an XUnit logger.</returns>
+    public static XUnitLogger<T> BuildLoggerFor<T>(this ITestOutputHelper output, string name, IXUnitFormatter formatter, IExternalScopeProvider scopeProvider)
+    {
+        return new XUnitLogger<T>(name, formatter, scopeProvider, output);
+    }
+
     /// <summary>
     /// Creates an instance of an XUnit logger for the specified type.
     /// </summary>
@@ -20,6 +34,18 @@ public static class ILoggerExtensions
     /// <returns>An instance of an XUnit logger.</returns>
     public static ILogger<T> BuildLoggerFor<T>(this ITestOutputHelper output)
     {
-        return new XUnitLogger<T>(output);
+        string name = typeof(T).FullName ?? typeof(T).Name;
+        var options = new SimpleXUnitFormatterOptions
+        {
+            IncludeScopes = false,
+            TimestampFormat = "[yyyy-MM-dd HH:mm:ss.fff]",
+            UseUtcTimestamp = false,
+            SingleLine = true
+        };
+
+        var formatter = new SimpleXUnitFormatter(options);
+        var scopeProvider = NullExternalScopeProvider.Instance;
+
+        return output.BuildLoggerFor<T>(name, formatter, scopeProvider);
     }
 }

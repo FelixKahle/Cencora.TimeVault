@@ -33,7 +33,12 @@ public sealed class Startup
     /// <param name="services">The collection of services to configure.</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddCustomLogging();
+        services.AddLogging(builder => builder.Configure(options =>
+        {
+            options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId |
+                                              ActivityTrackingOptions.ParentId | ActivityTrackingOptions.Baggage |
+                                              ActivityTrackingOptions.Tags;
+        }));
         services.AddControllers();
         services.AddProblemDetails();
         services.ConfigureJsonOptions(options =>
@@ -69,9 +74,6 @@ public sealed class Startup
         app.UseHttpsRedirection();
         app.UseHttpLogging();
         app.UseRouting();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 }

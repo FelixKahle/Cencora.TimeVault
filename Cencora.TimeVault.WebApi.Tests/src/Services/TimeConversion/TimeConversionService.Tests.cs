@@ -6,8 +6,11 @@ using Cencora.TimeVault.WebApi.Services.TimeConversion;
 using Cencora.TimeVault.WebApi.Tests.Utils;
 using Xunit.Abstractions;
 
-namespace Cencora.TimeVault.WebApi.Tests.TimeConversion.Services;
+namespace Cencora.TimeVault.WebApi.Tests.Services.TimeConversion;
 
+/// <summary>
+/// Represents the test class for the <see cref="TimeConversionService"/> class.
+/// </summary>
 public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
 {
     /// <summary>
