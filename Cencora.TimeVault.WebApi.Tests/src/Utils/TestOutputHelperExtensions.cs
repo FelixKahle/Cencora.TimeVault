@@ -34,15 +34,8 @@ public static class TestOutputHelperExtensions
     /// <returns>An instance of an XUnit logger.</returns>
     public static ILogger<T> BuildLoggerFor<T>(this ITestOutputHelper output)
     {
-        string name = typeof(T).FullName ?? typeof(T).Name;
-        var options = new SimpleXUnitFormatterOptions
-        {
-            IncludeScopes = false,
-            TimestampFormat = "[yyyy-MM-dd HH:mm:ss.fff] ",
-            UseUtcTimestamp = false,
-            SingleLine = false
-        };
-
+        var name = typeof(T).FullName ?? typeof(T).Name;
+        var options = SimpleXUnitFormatterOptions.Default;
         var formatter = new SimpleXUnitFormatter(options);
         var scopeProvider = NullExternalScopeProvider.Instance;
 

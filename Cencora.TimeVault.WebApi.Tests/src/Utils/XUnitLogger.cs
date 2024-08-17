@@ -12,7 +12,7 @@ namespace Cencora.TimeVault.WebApi.Tests.Utils;
 /// Represents a logger implementation for XUnit tests.
 /// </summary>
 /// <typeparam name="T">The type to create a logger for.</typeparam>
-public class XUnitLogger<T> : XUnitLoggerBase, ILogger<T>
+public class XUnitLogger<T> : ILogger<T>
 {
     private readonly string _name;
     private readonly ITestOutputHelper _output;
@@ -21,17 +21,22 @@ public class XUnitLogger<T> : XUnitLoggerBase, ILogger<T>
     /// <summary>
     /// Gets or sets the scope provider.
     /// </summary>
-    internal IExternalScopeProvider ScopeProvider { get; set; }
+    internal IExternalScopeProvider ScopeProvider { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XUnitLogger{T}"/> class.
     /// </summary>
+    /// <param name="name">The name of the logger.</param>
+    /// <param name="formatter">The formatter to use for log messages.</param>
+    /// <param name="scopeProvider">The scope provider to use for log messages.</param>
+    /// <param name="output">The test output helper to write log messages to.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/>, <paramref name="formatter"/>, <paramref name="scopeProvider"/>, or <paramref name="output"/> is <see langword="null"/>.</exception>
     public XUnitLogger(string name, IXUnitFormatter formatter, IExternalScopeProvider scopeProvider, ITestOutputHelper output)
     {
-        _name = name;
-        _formatter = formatter;
-        ScopeProvider = scopeProvider;
-        _output = output;
+        _name = name ?? throw new ArgumentNullException(nameof(name));
+        _formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
+        ScopeProvider = scopeProvider ?? throw new ArgumentNullException(nameof(scopeProvider));
+        _output = output ?? throw new ArgumentNullException(nameof(output));
     }
 
     /// <inheritdoc/>
@@ -53,21 +58,18 @@ public class XUnitLogger<T> : XUnitLoggerBase, ILogger<T>
             return;
         }
 
-        var stringWriter = GetStringWriter();
+        using var stringWriter = new StringWriter();
         var logEntry = new LogEntry<TState>(logLevel, _name, eventId, state, exception, formatter);
-
         _formatter.Write(in logEntry, ScopeProvider, stringWriter);
-
         var sb = stringWriter.GetStringBuilder();
 
+        // Nothing to log
         if (sb.Length == 0)
         {
             return;
         }
 
         var computedAnsiString = sb.ToString();
-        ResetStringWriter();
-
         _output.WriteLine(computedAnsiString);
     }
 }

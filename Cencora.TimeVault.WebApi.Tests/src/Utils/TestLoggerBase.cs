@@ -21,7 +21,7 @@ public abstract class TestLoggerBase<TLogger>
     /// Initializes a new instance of the <see cref="TestLoggerBase{TLogger}"/> class.
     /// </summary>
     /// <param name="output">The test output helper.</param>
-    public TestLoggerBase(ITestOutputHelper output)
+    protected TestLoggerBase(ITestOutputHelper output)
     {
         Logger = output.BuildLoggerFor<TLogger>();
     }

@@ -10,7 +10,7 @@ namespace Cencora.TimeVault.WebApi.Tests.Utils;
 public sealed class SimpleXUnitFormatter : IXUnitFormatter
 {
     private const string LogLevelPadding = ": ";
-    private static readonly string MessagePadding = new string(' ', GetLogLevelString(LogLevel.Information).Length + LogLevelPadding.Length);
+    private static readonly string MessagePadding = new(' ', GetLogLevelString(LogLevel.Information).Length + LogLevelPadding.Length);
     private static readonly string NewLineWithMessagePadding = Environment.NewLine + MessagePadding;
 
     private readonly SimpleXUnitFormatterOptions _loggerOptions;
@@ -27,8 +27,8 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     /// <inheritdoc/>
     public void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider? scopeProvider, TextWriter textWriter)
     {
-        string message = logEntry.Formatter(logEntry.State, logEntry.Exception);
-        string logLevelString = GetLogLevelString(logEntry.LogLevel);
+        var message = logEntry.Formatter(logEntry.State, logEntry.Exception);
+        var logLevelString = GetLogLevelString(logEntry.LogLevel);
 
         WriteTimestamp(textWriter);
         textWriter.Write(logLevelString);
@@ -52,14 +52,15 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
         WriteScopeInformation(textWriter, scopeProvider);
         WriteMessage(textWriter, message);
 
-        if (logEntry.Exception != null)
+        if (logEntry.Exception == null)
         {
-            if (!_loggerOptions.SingleLine && !string.IsNullOrEmpty(message))
-            {
-                textWriter.WriteLine();
-            }
-            WriteMessage(textWriter, logEntry.Exception.ToString());
+            return;
         }
+        if (!_loggerOptions.SingleLine && !string.IsNullOrEmpty(message))
+        {
+            textWriter.WriteLine();
+        }
+        WriteMessage(textWriter, logEntry.Exception.ToString());
     }
 
     /// <summary>
@@ -67,13 +68,14 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     /// </summary>
     private void WriteMessage(TextWriter textWriter, string message)
     {
-        if (!string.IsNullOrEmpty(message))
+        if (string.IsNullOrEmpty(message))
         {
-            textWriter.Write(_loggerOptions.SingleLine ? ' ' : MessagePadding);
-            textWriter.Write(_loggerOptions.SingleLine
-                ? message.Replace(Environment.NewLine, " ")
-                : message.Replace(Environment.NewLine, NewLineWithMessagePadding));
+            return;
         }
+        textWriter.Write(_loggerOptions.SingleLine ? ' ' : MessagePadding);
+        textWriter.Write(_loggerOptions.SingleLine
+            ? message.Replace(Environment.NewLine, " ")
+            : message.Replace(Environment.NewLine, NewLineWithMessagePadding));
     }
 
     /// <summary>
@@ -81,27 +83,29 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     /// </summary>
     private void WriteScopeInformation(TextWriter textWriter, IExternalScopeProvider? scopeProvider)
     {
-        if (_loggerOptions.IncludeScopes && scopeProvider != null)
+        if (!_loggerOptions.IncludeScopes || scopeProvider == null)
         {
-            bool isFirstScope = true;
-            scopeProvider.ForEachScope((scope, writer) =>
-            {
-                if (isFirstScope)
-                {
-                    writer.Write(MessagePadding + "=> ");
-                    isFirstScope = false;
-                }
-                else
-                {
-                    writer.Write(" => ");
-                }
-                writer.Write(scope);
-            }, textWriter);
+            return;
+        }
 
-            if (!isFirstScope && !_loggerOptions.SingleLine)
+        var isFirstScope = true;
+        scopeProvider.ForEachScope((scope, writer) =>
+        {
+            if (isFirstScope)
             {
-                textWriter.WriteLine();
+                writer.Write(MessagePadding + "=> ");
+                isFirstScope = false;
             }
+            else
+            {
+                writer.Write(" => ");
+            }
+            writer.Write(scope);
+        }, textWriter);
+
+        if (!isFirstScope && !_loggerOptions.SingleLine)
+        {
+            textWriter.WriteLine();
         }
     }
 
@@ -137,6 +141,7 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
             LogLevel.Warning => "warn",
             LogLevel.Error => "fail",
             LogLevel.Critical => "crit",
+            LogLevel.None => "none",
             _ => throw new ArgumentOutOfRangeException(nameof(logLevel))
         };
     }

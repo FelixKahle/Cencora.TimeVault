@@ -16,10 +16,12 @@ profile:
 #  - name: <SomeEnabledInspectionId>
 
 #Disable inspections
-#exclude:
-#  - name: <SomeDisabledInspectionId>
-#    paths:
-#      - <path/where/not/run/inspection>
+exclude:
+  - name: MemberCanBePrivate.Global
+  - name: UnusedType.Global
+  - name: UnusedParameter.Global
+  - name: UnusedMember.Global
+  - name: ConvertIfStatementToSwitchStatement
 
 #Execute shell command before Qodana execution (Applied in CI/CD pipeline)
 #bootstrap: sh ./prepare-qodana.sh

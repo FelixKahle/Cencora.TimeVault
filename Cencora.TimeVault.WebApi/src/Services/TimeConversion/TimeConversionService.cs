@@ -53,7 +53,7 @@ public class TimeConversionService : ITimeConversionService
         };
 
         // Log some arbitrary information about the conversion.
-        _logger.LogInformation($"Converted: {result}");
+        _logger.LogInformation("Converted: {result}", result);
 
         return result;
     }

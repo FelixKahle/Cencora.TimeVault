@@ -12,7 +12,7 @@ internal sealed class NullScope : IDisposable
     /// <summary>
     /// Gets a cached instance of <see cref="NullScope"/>.
     /// </summary>
-    public static NullScope Instance { get; } = new NullScope();
+    public static NullScope Instance { get; } = new();
 
     private NullScope()
     {

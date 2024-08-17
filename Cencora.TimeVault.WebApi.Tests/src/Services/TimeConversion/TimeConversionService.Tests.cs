@@ -35,8 +35,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
     [Fact]
     public void Constructor_WithValidArguments_InitializesLogger()
     {
-        var logger = Logger;
-        Assert.NotNull(new TimeConversionService(logger));
+        Assert.NotNull(new TimeConversionService(Logger));
     }
 
     [Fact]
