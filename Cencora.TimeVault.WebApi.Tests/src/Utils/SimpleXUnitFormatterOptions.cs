@@ -35,6 +35,4 @@ public class SimpleXUnitFormatterOptions
     /// When <c>true</c>, the entire message gets logged in a single line.
     /// </summary>
     public bool SingleLine { get; set; }
-
-    internal virtual void Configure(IConfiguration configuration) => configuration.Bind(this);
 }

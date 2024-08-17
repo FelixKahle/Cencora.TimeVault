@@ -8,9 +8,9 @@ using Xunit.Abstractions;
 namespace Cencora.TimeVault.WebApi.Tests.Utils;
 
 /// <summary>
-/// Extension methods for <see cref="ILogger{T}"/>.
+/// Extension methods for <see cref="ITestOutputHelper"/>.
 /// </summary>
-public static class LoggerExtensions
+public static class TestOutputHelperExtensions
 {
     /// <summary>
     /// Creates an instance of an XUnit logger for the specified type.
@@ -38,9 +38,9 @@ public static class LoggerExtensions
         var options = new SimpleXUnitFormatterOptions
         {
             IncludeScopes = false,
-            TimestampFormat = "[yyyy-MM-dd HH:mm:ss.fff]",
+            TimestampFormat = "[yyyy-MM-dd HH:mm:ss.fff] ",
             UseUtcTimestamp = false,
-            SingleLine = true
+            SingleLine = false
         };
 
         var formatter = new SimpleXUnitFormatter(options);

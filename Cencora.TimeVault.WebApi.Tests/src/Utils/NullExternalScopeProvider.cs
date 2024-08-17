@@ -11,6 +11,9 @@ namespace Cencora.TimeVault.WebApi.Tests.Utils;
 /// </summary>
 internal sealed class NullExternalScopeProvider : IExternalScopeProvider
 {
+    /// <summary>
+    /// Initializes a new instance of <see cref="NullExternalScopeProvider"/>.
+    /// </summary>
     private NullExternalScopeProvider()
     {
     }

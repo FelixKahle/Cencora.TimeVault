@@ -12,12 +12,8 @@ namespace Cencora.TimeVault.WebApi.Tests.Utils;
 /// Represents a logger implementation for XUnit tests.
 /// </summary>
 /// <typeparam name="T">The type to create a logger for.</typeparam>
-public class XUnitLogger<T> : ILogger<T>
+public class XUnitLogger<T> : XUnitLoggerBase, ILogger<T>
 {
-    [ThreadStatic]
-    // ReSharper disable once StaticMemberInGenericType
-    private static StringWriter? _stringWriter;
-
     private readonly string _name;
     private readonly ITestOutputHelper _output;
     private readonly IXUnitFormatter _formatter;
@@ -57,12 +53,12 @@ public class XUnitLogger<T> : ILogger<T>
             return;
         }
 
-        _stringWriter ??= new StringWriter();
+        var stringWriter = GetStringWriter();
         var logEntry = new LogEntry<TState>(logLevel, _name, eventId, state, exception, formatter);
 
-        _formatter.Write(in logEntry, ScopeProvider, _stringWriter);
+        _formatter.Write(in logEntry, ScopeProvider, stringWriter);
 
-        var sb = _stringWriter.GetStringBuilder();
+        var sb = stringWriter.GetStringBuilder();
 
         if (sb.Length == 0)
         {
@@ -70,12 +66,7 @@ public class XUnitLogger<T> : ILogger<T>
         }
 
         var computedAnsiString = sb.ToString();
-        sb.Clear();
-
-        if (sb.Capacity > 1024)
-        {
-            sb.Capacity = 1024;
-        }
+        ResetStringWriter();
 
         _output.WriteLine(computedAnsiString);
     }
