@@ -21,11 +21,10 @@ public static class TimeConversionRequestExtensions
     {
         return new TimeConversionRequest
         {
-            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture),
+            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
             OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
             TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
             ConvertedTimeFormat = request.ConvertedTimeFormat,
-            OriginTimeFormat = request.OriginTimeFormat,
             OriginResponseTimeFormat = request.OriginTimeFormat,
         };
     }
@@ -54,7 +53,7 @@ public static class TimeConversionRequestExtensions
     {
         return new TimeConversionInput
         {
-            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture),
+            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
             OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
             TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
         };

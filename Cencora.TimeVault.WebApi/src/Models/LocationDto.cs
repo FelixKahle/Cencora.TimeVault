@@ -2,22 +2,26 @@
 //
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Cencora.TimeVault.WebApi.Models;
 
 /// <summary>
 /// Represents a location with city, country, postal code, and state or province information.
 /// </summary>
-public record LocationDto
+public record LocationDto : IValidatableObject
 {
     /// <summary>
     /// Gets or sets the city of the location.
     /// </summary>
-    public string? City { get; init; }
+    [Required]
+    public required string City { get; init; }
 
     /// <summary>
     /// Gets or sets the country of the location.
     /// </summary>
-    public string? Country { get; init; }
+    [Required]
+    public required string Country { get; init; }
 
     /// <summary>
     /// Gets or sets the postal code of the location.
@@ -32,6 +36,28 @@ public record LocationDto
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{City}, {StateOrProvince}, {PostalCode}, {Country}";
+        var arr = new string?[]
+        {
+            City,
+            StateOrProvince,
+            PostalCode,
+            Country,
+        };
+
+        return string.Join(", ", arr.Where(x => !string.IsNullOrWhiteSpace(x)));
+    }
+
+    /// <inheritdoc/>
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (string.IsNullOrWhiteSpace(City))
+        {
+            yield return new ValidationResult("The city is required.", [nameof(City)]);
+        }
+
+        if (string.IsNullOrWhiteSpace(Country))
+        {
+            yield return new ValidationResult("The country is required.", [nameof(Country)]);
+        }
     }
 }

@@ -40,4 +40,14 @@ public static class StringExtensions
             return false;
         }
     }
+
+    /// <summary>
+    /// Checks whether all strings in the specified collection are <c>null</c> or white space.
+    /// </summary>
+    /// <param name="values">The collection of strings to check.</param>
+    /// <returns><c>true</c> if all strings are <c>null</c> or white space; otherwise, <c>false</c>.</returns>
+    public static bool AllNullOrWhiteSpace(this IEnumerable<string?> values)
+    {
+        return values.All(string.IsNullOrWhiteSpace);
+    }
 }

@@ -5,9 +5,10 @@
 namespace Cencora.TimeVault.WebApi.Models.TimeConversion;
 
 /// <summary>
-/// The input for a time conversion operation.
+/// Represents a request to convert a time from one time zone to another
+/// based on the location of the origin and target time zones.
 /// </summary>
-public readonly struct TimeConversionRequest
+public readonly struct LocatedTimeConversionRequest
 {
     /// <summary>
     /// Gets or sets the origin time.
@@ -17,12 +18,12 @@ public readonly struct TimeConversionRequest
     /// <summary>
     /// Gets or sets the origin time zone.
     /// </summary>
-    public required TimeZoneInfo OriginTimeZone { get; init; }
+    public required Location OriginLocation { get; init; }
 
     /// <summary>
     /// Gets or sets the target time zone.
     /// </summary>
-    public required TimeZoneInfo TargetTimeZone { get; init; }
+    public required Location TargetLocation { get; init; }
 
     /// <summary>
     /// Gets or sets the converted time format.
@@ -42,6 +43,6 @@ public readonly struct TimeConversionRequest
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{OriginTime} {OriginTimeZone.Id} -> {TargetTimeZone.Id} ({ConvertedTimeFormat})";
+        return $"{OriginTime} {OriginLocation} -> {TargetLocation} ({ConvertedTimeFormat})";
     }
 }

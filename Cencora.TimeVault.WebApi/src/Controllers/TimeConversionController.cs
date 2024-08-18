@@ -52,6 +52,32 @@ public class TimeConversionController : ControllerBase
     }
 
     /// <summary>
+    /// Converts a time from one time zone to another based on the location of the origin and target.
+    /// </summary>
+    /// <param name="request">The request containing the time to convert.</param>
+    /// <returns>The converted time.</returns>
+    [HttpGet]
+    [Consumes("application/json")]
+    [Route("location")]
+    public IActionResult GetLocatedConvertTime([FromQuery] LocatedTimeConversionRequest request)
+    {
+        return Ok();
+    }
+
+    /// <summary>
+    /// Converts a time from one time zone to another based on the location of the origin and target.
+    /// </summary>
+    /// <param name="request">The request containing the time to convert.</param>
+    /// <returns>The converted time.</returns>
+    [HttpPost]
+    [Consumes("application/json")]
+    [Route("location")]
+    public IActionResult PostLocatedConvertTime([FromBody] LocatedTimeConversionRequest request)
+    {
+        return Ok();
+    }
+
+    /// <summary>
     /// Processes a time conversion request.
     /// </summary>
     /// <param name="request">The request to process.</param>
