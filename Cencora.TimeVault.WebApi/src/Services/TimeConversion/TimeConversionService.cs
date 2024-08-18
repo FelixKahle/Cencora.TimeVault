@@ -38,12 +38,16 @@ public class TimeConversionService : ITimeConversionService
     /// <inheritdoc/>
     public TimeConversionResult ConvertTime(TimeConversionInput input)
     {
-        var time = input.OriginTime;
         var originTimeZone = input.OriginTimeZone;
         var targetTimeZone = input.TargetTimeZone;
 
+        var time = TimeZoneInfo.ConvertTimeToUtc(
+            DateTime.SpecifyKind(input.OriginTime, DateTimeKind.Unspecified), 
+            input.OriginTimeZone
+        );
+
         // Perform the time conversion.
-        var convertedTime = TimeZoneInfo.ConvertTime(time, originTimeZone, targetTimeZone);
+        var convertedTime = TimeZoneInfo.ConvertTimeFromUtc(time, targetTimeZone);
         var result = new TimeConversionResult
         {
             ConvertedTime = convertedTime,
