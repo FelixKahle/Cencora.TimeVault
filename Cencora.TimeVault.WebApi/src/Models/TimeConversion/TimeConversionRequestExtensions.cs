@@ -44,4 +44,19 @@ public static class TimeConversionRequestExtensions
             TargetTimeZone = request.TargetTimeZone,
         };
     }
+
+    /// <summary>
+    /// Converts a <see cref="TimeConversionRequest"/> to a <see cref="TimeConversionRequestDto"/>.
+    /// </summary>
+    /// <param name="request">The request to convert.</param>
+    /// <returns>The converted request.</returns>
+    public static TimeConversionInput ToInput(this TimeConversionRequestDto request)
+    {
+        return new TimeConversionInput
+        {
+            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture),
+            OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
+            TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
+        };
+    }
 }

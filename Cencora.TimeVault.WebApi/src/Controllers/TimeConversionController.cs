@@ -33,19 +33,7 @@ public class TimeConversionController : ControllerBase
     [Route("timezone")]
     public IActionResult GetConvertTime([FromQuery] TimeConversionRequestDto request)
     {
-        var model = request.ToModel();
-        var input = model.ToInput();
-        var result = _timeConversionService.ConvertTime(input);
-        var response = new TimeConversionResponse
-        {
-            ConvertedTime = result.ConvertedTime,
-            ConvertedTimeFormat = model.ConvertedTimeFormat,
-            OriginTime = result.OriginTime,
-            OriginTimeFormat = model.OriginResponseTimeFormat,
-            OriginTimeZone = result.OriginTimeZone,
-            TargetTimeZone = result.TargetTimeZone,
-        };
-
+        var response = ProcessRequest(request);
         return Ok(response.ToDto());
     }
 
@@ -59,9 +47,21 @@ public class TimeConversionController : ControllerBase
     [Route("timezone")]
     public IActionResult PostConvertTime([FromBody] TimeConversionRequestDto request)
     {
+        var response = ProcessRequest(request);
+        return Ok(response.ToDto());
+    }
+
+    /// <summary>
+    /// Processes a time conversion request.
+    /// </summary>
+    /// <param name="request">The request to process.</param>
+    /// <returns>The response to the request.</returns>
+    private TimeConversionResponse ProcessRequest(TimeConversionRequestDto request)
+    {
         var model = request.ToModel();
         var input = model.ToInput();
         var result = _timeConversionService.ConvertTime(input);
+        
         var response = new TimeConversionResponse
         {
             ConvertedTime = result.ConvertedTime,
@@ -72,6 +72,6 @@ public class TimeConversionController : ControllerBase
             TargetTimeZone = result.TargetTimeZone,
         };
 
-        return Ok(response.ToDto());
+        return response;
     }
 }
