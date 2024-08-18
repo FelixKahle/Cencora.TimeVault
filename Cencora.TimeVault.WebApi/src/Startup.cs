@@ -72,7 +72,6 @@ public sealed class Startup
         app.UseExceptionHandler();
         app.UseStatusCodePages();
         app.UseHttpsRedirection();
-        //app.UseHttpLogging();
         app.UseRouting();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }

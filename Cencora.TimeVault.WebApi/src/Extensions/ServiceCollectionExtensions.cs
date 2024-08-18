@@ -27,4 +27,15 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Adds HTTP logging to the application.
+    /// </summary>
+    /// <param name="services">The collection of services to configure.</param>
+    /// <returns>The collection of services.</returns>
+    public static IServiceCollection AddHttpLogging(this IServiceCollection services)
+    {
+        services.AddHttpLogging(options => { });
+        return services;
+    }
 }
