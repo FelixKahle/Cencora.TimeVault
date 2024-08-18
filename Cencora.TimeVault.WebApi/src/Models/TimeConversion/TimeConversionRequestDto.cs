@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Cencora.TimeVault.WebApi.Extensions;
 
 namespace Cencora.TimeVault.WebApi.Models.TimeConversion;
@@ -98,7 +99,7 @@ public record TimeConversionRequestDto : IValidatableObject
             yield return new ValidationResult("The origin time format is required.", [nameof(OriginTimeFormat)]);
         }
 
-        // Validate the target time zone and converted time format.
+        // Validate the target time strings.
         if (string.IsNullOrWhiteSpace(TargetTimeZone))
         {
             yield return new ValidationResult("The target time zone is required.", [nameof(TargetTimeZone)]);
@@ -116,6 +117,16 @@ public record TimeConversionRequestDto : IValidatableObject
         if (ConvertedTimeFormat.IsValidDateTimeFormat() == false)
         {
             yield return new ValidationResult("The converted time format is not valid.", [nameof(ConvertedTimeFormat)]);
+        }
+        if (OriginResponseTimeFormat.IsValidDateTimeFormat() == false)
+        {
+            yield return new ValidationResult("The origin response time format is not valid.", [nameof(OriginResponseTimeFormat)]);
+        }
+
+        // Check we can the origin time using the origin time format.
+        if (DateTime.TryParseExact(OriginTime, OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _) == false)
+        {
+            yield return new ValidationResult($"The origin time is not in the specified format: {OriginTimeFormat}.", [nameof(OriginTime)]);
         }
 
         // Validate the time zones.

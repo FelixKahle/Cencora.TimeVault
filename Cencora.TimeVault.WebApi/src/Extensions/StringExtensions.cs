@@ -7,7 +7,8 @@ using System.Globalization;
 namespace Cencora.TimeVault.WebApi.Extensions;
 
 /// <summary>
-/// Extension methods for <see cref="String"/> 
+/// Extension methods for <see cref="String"/>
+/// </summary>
 public static class StringExtensions
 {
     /// <summary>
@@ -15,6 +16,10 @@ public static class StringExtensions
     /// </summary>
     /// <param name="format">The format to validate.</param>
     /// <returns><c>true</c> if the format is valid; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// Due to exceptions being thrown when parsing a date time string with an invalid format,
+    /// this method can be slow for invalid formats.
+    /// </remarks>
     public static bool IsValidDateTimeFormat(this string format)
     {
         if (string.IsNullOrWhiteSpace(format))

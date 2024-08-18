@@ -16,6 +16,7 @@ namespace Cencora.TimeVault.WebApi;
 /// </summary>
 public sealed class Startup
 {
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private IConfiguration Configuration { get; }
 
     /// <summary>

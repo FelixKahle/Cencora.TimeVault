@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The collection of services.</returns>
     public static IServiceCollection AddHttpLogging(this IServiceCollection services)
     {
-        services.AddHttpLogging(options => { });
+        services.AddHttpLogging(_ => { });
         return services;
     }
 }

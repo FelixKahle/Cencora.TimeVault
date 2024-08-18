@@ -3,9 +3,9 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using System.Globalization;
-using Cencora.TimeVault.WebApi.Models.TimeConversion;
+using Cencora.TimeVault.WebApi.Services.TimeConversion;
 
-namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
+namespace Cencora.TimeVault.WebApi.Models.TimeConversion;
 
 /// <summary>
 /// Extension methods for <see cref="TimeConversionRequest"/>.
