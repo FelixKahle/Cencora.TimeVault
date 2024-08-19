@@ -18,22 +18,25 @@ namespace Cencora.TimeVault.WebApi.Controllers;
 public class TimeConversionController : ControllerBase
 {
     private readonly ITimeConversionService _timeConversionService;
+    private readonly ILocatedTimeConversionService _locatedTimeConversionService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TimeConversionController"/> class.
     /// </summary>
     /// <param name="timeConversionService">The time conversion service.</param>
-    public TimeConversionController(ITimeConversionService timeConversionService)
+    /// <param name="locatedTimeConversionService">The located time conversion service.</param>
+    public TimeConversionController(ITimeConversionService timeConversionService, ILocatedTimeConversionService locatedTimeConversionService)
     {
         _timeConversionService = timeConversionService;
+        _locatedTimeConversionService = locatedTimeConversionService;
     }
 
     [HttpGet]
     [Consumes("application/json")]
     [Route("timezone")]
-    public IActionResult GetConvertTime([FromQuery] TimeConversionRequestDto request)
+    public async Task<IActionResult> GetConvertTime([FromQuery] TimeConversionRequestDto request)
     {
-        var response = ProcessRequest(request);
+        var response = await ProcessRequest(request);
         return Ok(response.ToDto());
     }
 
@@ -45,9 +48,9 @@ public class TimeConversionController : ControllerBase
     [HttpPost]
     [Consumes("application/json")]
     [Route("timezone")]
-    public IActionResult PostConvertTime([FromBody] TimeConversionRequestDto request)
+    public async Task<IActionResult> PostConvertTime([FromBody] TimeConversionRequestDto request)
     {
-        var response = ProcessRequest(request);
+        var response = await ProcessRequest(request);
         return Ok(response.ToDto());
     }
 
@@ -59,9 +62,10 @@ public class TimeConversionController : ControllerBase
     [HttpGet]
     [Consumes("application/json")]
     [Route("location")]
-    public IActionResult GetLocatedConvertTime([FromQuery] LocatedTimeConversionRequest request)
+    public async Task<IActionResult> GetLocatedConvertTime([FromQuery] LocatedTimeConversionRequestDto request)
     {
-        return Ok();
+        var response = await ProcessLocatedRequest(request);
+        return Ok(response);
     }
 
     /// <summary>
@@ -72,9 +76,10 @@ public class TimeConversionController : ControllerBase
     [HttpPost]
     [Consumes("application/json")]
     [Route("location")]
-    public IActionResult PostLocatedConvertTime([FromBody] LocatedTimeConversionRequest request)
+    public IActionResult PostLocatedConvertTime([FromBody] LocatedTimeConversionRequestDto request)
     {
-        return Ok();
+        var response = ProcessLocatedRequest(request);
+        return Ok(response);
     }
 
     /// <summary>
@@ -82,11 +87,11 @@ public class TimeConversionController : ControllerBase
     /// </summary>
     /// <param name="request">The request to process.</param>
     /// <returns>The response to the request.</returns>
-    private TimeConversionResponse ProcessRequest(TimeConversionRequestDto request)
+    private async Task<TimeConversionResponse> ProcessRequest(TimeConversionRequestDto request)
     {
         var model = request.ToModel();
         var input = model.ToInput();
-        var result = _timeConversionService.ConvertTime(input);
+        var result = await _timeConversionService.ConvertTimeAsync(input);
         
         var response = new TimeConversionResponse
         {
@@ -96,6 +101,32 @@ public class TimeConversionController : ControllerBase
             OriginTimeFormat = model.OriginResponseTimeFormat,
             OriginTimeZone = result.OriginTimeZone,
             TargetTimeZone = result.TargetTimeZone,
+        };
+
+        return response;
+    }
+
+    /// <summary>
+    /// Processes a located time conversion request.
+    /// </summary>
+    /// <param name="request">The request to process.</param>
+    /// <returns>The response to the request.</returns>
+    private async Task<LocatedTimeConversionResponse> ProcessLocatedRequest(LocatedTimeConversionRequestDto request)
+    {
+        var model = request.ToModel();
+        var input = model.ToInput();
+        var result = await _locatedTimeConversionService.ConvertTimeAsync(input);
+
+        var response = new LocatedTimeConversionResponse
+        {
+            ConvertedTime = result.ConvertedTime,
+            ConvertedTimeFormat = model.ConvertedTimeFormat,
+            OriginTime = result.OriginTime,
+            OriginTimeFormat = model.OriginResponseTimeFormat,
+            OriginTimeZone = result.OriginTimeZone,
+            TargetTimeZone = result.TargetTimeZone,
+            OriginLocation = model.OriginLocation,
+            TargetLocation = model.TargetLocation,
         };
 
         return response;

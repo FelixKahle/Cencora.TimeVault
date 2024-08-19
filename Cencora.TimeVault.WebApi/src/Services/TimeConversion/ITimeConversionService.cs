@@ -14,5 +14,5 @@ public interface ITimeConversionService
     /// </summary>
     /// <param name="input">The input for the conversion.</param>
     /// <returns>The result of the conversion.</returns>
-    TimeConversionResult ConvertTime(TimeConversionInput input);
+    Task<TimeConversionResult> ConvertTimeAsync(in TimeConversionInput input);
 }

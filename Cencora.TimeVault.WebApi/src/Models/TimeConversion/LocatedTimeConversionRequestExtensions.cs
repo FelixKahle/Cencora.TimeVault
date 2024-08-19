@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using System.Globalization;
+using Cencora.TimeVault.WebApi.Services.TimeConversion;
 
 namespace Cencora.TimeVault.WebApi.Models.TimeConversion;
 
@@ -25,6 +26,21 @@ public static class LocatedTimeConversionRequestExtensions
             TargetLocation = dto.TargetLocation.ToModel(),
             ConvertedTimeFormat = dto.ConvertedTimeFormat,
             OriginResponseTimeFormat = dto.OriginResponseTimeFormat,
+        };
+    }
+
+    /// <summary>
+    /// Converts a <see cref="LocatedTimeConversionRequest"/> to a <see cref="LocatedTimeConversionInput"/>.
+    /// </summary>
+    /// <param name="request">The request to convert.</param>
+    /// <returns>The converted input.</returns>
+    public static LocatedTimeConversionInput ToInput(this LocatedTimeConversionRequest request)
+    {
+        return new LocatedTimeConversionInput
+        {
+            OriginTime = request.OriginTime,
+            OriginLocation = request.OriginLocation,
+            TargetLocation = request.TargetLocation,
         };
     }
 }

@@ -10,25 +10,6 @@ namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the <see cref="ITimeConversionService"/> to the service collection.
-    /// </summary>
-    /// <remarks>
-    /// The <see cref="ITimeConversionService"/> is added as a transient service.
-    /// </remarks>
-    /// <typeparam name="TConversion">The type of the <see cref="ITimeConversionService"/> implementation.</typeparam>
-    /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-    /// <returns>The <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection AddTimeConversion<TConversion>(this IServiceCollection services)
-        where TConversion : class, ITimeConversionService
-    {
-        ArgumentNullException.ThrowIfNull(services, nameof(services));
-
-        services.AddTransient<ITimeConversionService, TConversion>();
-
-        return services;
-    }
-
-    /// <summary>
     /// Adds the <see cref="TimeConversionService"/> to the service collection.
     /// </summary>
     /// <remarks>
@@ -40,7 +21,8 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services, nameof(services));
 
-        services.AddTimeConversion<TimeConversionService>();
+        services.AddTransient<ITimeConversionService, TimeConversionService>();
+        services.AddTransient<ILocatedTimeConversionService, LocatedTimeConversionService>();
 
         return services;
     }

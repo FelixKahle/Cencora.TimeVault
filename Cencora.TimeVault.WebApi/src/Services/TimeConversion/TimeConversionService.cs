@@ -36,7 +36,7 @@ public class TimeConversionService : ITimeConversionService
     }
 
     /// <inheritdoc/>
-    public TimeConversionResult ConvertTime(TimeConversionInput input)
+    public Task<TimeConversionResult> ConvertTimeAsync(in TimeConversionInput input)
     {
         var time = input.OriginTime;
         var originTimeZone = input.OriginTimeZone;
@@ -56,6 +56,6 @@ public class TimeConversionService : ITimeConversionService
         // Log some arbitrary information about the conversion.
         _logger.LogInformation("Converted: {result}", result);
 
-        return result;
+        return Task.FromResult(result);
     }
 }

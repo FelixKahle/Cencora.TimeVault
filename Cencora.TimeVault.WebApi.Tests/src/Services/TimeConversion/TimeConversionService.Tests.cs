@@ -45,7 +45,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
     }
 
     [Fact]
-    public void ConvertTime_CurrentTimeWithEqualTimeZones_ReturnsInputTime()
+    public async Task ConvertTime_CurrentTimeWithEqualTimeZones_ReturnsInputTime()
     {
         var service = new TimeConversionService(Logger);
         var input = new TimeConversionInput
@@ -55,7 +55,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
             TargetTimeZone = TimeZoneInfo.Local
         };
 
-        var result = service.ConvertTime(input);
+        var result = await service.ConvertTimeAsync(input);
 
         Assert.Equal(DateTime.Now, result.ConvertedTime, Toleration);
         Assert.Equal(input.OriginTime, result.ConvertedTime, Toleration);
@@ -65,7 +65,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
     }
 
     [Fact]
-    public void ConvertTime_CurrentTimeWithDifferentTimeZones_ReturnsConvertedTime()
+    public async Task ConvertTime_CurrentTimeWithDifferentTimeZones_ReturnsConvertedTime()
     {
         var service = new TimeConversionService(Logger);
         var input = new TimeConversionInput
@@ -75,7 +75,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
             TargetTimeZone = TimeZoneInfo.Utc
         };
 
-        var result = service.ConvertTime(input);
+        var result = await service.ConvertTimeAsync(input);
 
         Assert.Equal(DateTime.Now, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
@@ -84,7 +84,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
     }
 
     [Fact]
-    public void ConvertTime_PastTimeWithDifferentTimeZones_ReturnsConvertedTime()
+    public async Task ConvertTime_PastTimeWithDifferentTimeZones_ReturnsConvertedTime()
     {
         var service = new TimeConversionService(Logger);
         var originalTime = new DateTime(2001, 2, 21, 8, 0, 0);
@@ -97,7 +97,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
             TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Berlin")
         };
 
-        var result = service.ConvertTime(input);
+        var result = await service.ConvertTimeAsync(input);
 
         Assert.Equal(originalTime, result.OriginTime, Toleration);
         Assert.Equal(expectedTime, result.ConvertedTime, Toleration);
@@ -107,7 +107,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
     }
 
     [Fact]
-    public void ConvertTime_FutureTimeWithDifferentTimeZones_ReturnsConvertedTime()
+    public async Task ConvertTime_FutureTimeWithDifferentTimeZones_ReturnsConvertedTime()
     {
         var service = new TimeConversionService(Logger);
 
@@ -123,7 +123,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
             TargetTimeZone = targetTimeZone
         };
 
-        var result = service.ConvertTime(input);
+        var result = await service.ConvertTimeAsync(input);
 
         Assert.Equal(originTime, result.OriginTime, Toleration);
         Assert.Equal(expectedTime, result.ConvertedTime, Toleration);
