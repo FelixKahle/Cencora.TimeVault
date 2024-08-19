@@ -70,7 +70,11 @@ public class TimeZoneController : ControllerBase
 
         if (result.TimeZone is null)
         {
-            return NotFound();
+            return Problem(
+                detail: $"No time zone found for location {model.Location}.",
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Time zone not found"
+            );
         }
 
         var response = new TimeZoneResponse

@@ -4,7 +4,6 @@
 
 using System.Globalization;
 using Cencora.TimeVault.WebApi.Services.TimeConversion;
-using TimeZoneConverter;
 
 namespace Cencora.TimeVault.WebApi.Models.TimeConversion;
 
@@ -23,8 +22,8 @@ public static class TimeConversionRequestExtensions
         return new TimeConversionRequest
         {
             OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
-            OriginTimeZone = TZConvert.GetTimeZoneInfo(request.OriginTimeZone),
-            TargetTimeZone = TZConvert.GetTimeZoneInfo(request.TargetTimeZone),
+            OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
+            TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
             ConvertedTimeFormat = request.ConvertedTimeFormat,
             OriginResponseTimeFormat = request.OriginTimeFormat,
         };
@@ -55,8 +54,8 @@ public static class TimeConversionRequestExtensions
         return new TimeConversionInput
         {
             OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
-            OriginTimeZone = TZConvert.GetTimeZoneInfo(request.OriginTimeZone),
-            TargetTimeZone = TZConvert.GetTimeZoneInfo(request.TargetTimeZone),
+            OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
+            TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
         };
     }
 }

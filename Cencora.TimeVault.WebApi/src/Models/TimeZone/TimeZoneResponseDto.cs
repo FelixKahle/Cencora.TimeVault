@@ -15,23 +15,13 @@ public record TimeZoneResponseDto
     public required LocationDto Location { get; init; }
 
     /// <summary>
-    /// Gets or sets the IANA time zone ID.
+    /// Gets the time zone id for the time zone response.
     /// </summary>
-    public required string IanaTimeZoneId { get; init; }
-
-    /// <summary>
-    /// Get or sets the Windows time zone ID.
-    /// </summary>
-    public required string WindowsTimeZoneId { get; init; }
-
-    /// <summary>
-    /// Gets or sets the Rails time zone IDs.
-    /// </summary>
-    public required List<string> RailsTimeZoneIds { get; init; }
+    public required string TimeZoneId { get; init; }
 
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{Location} - {IanaTimeZoneId}, {WindowsTimeZoneId}, {string.Join(" | ", RailsTimeZoneIds)}";
+        return $"{Location} - {TimeZoneId}";
     }
 }
