@@ -4,6 +4,7 @@
 
 using Cencora.TimeVault.WebApi.Services.TimeConversion;
 using Cencora.TimeVault.WebApi.Tests.Utils;
+using TimeZoneConverter;
 using Xunit.Abstractions;
 
 namespace Cencora.TimeVault.WebApi.Tests.Services.TimeConversion;
@@ -93,8 +94,8 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         var input = new TimeConversionInput
         {
             OriginTime = originalTime,
-            OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/New_York"),
-            TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Berlin")
+            OriginTimeZone = TZConvert.GetTimeZoneInfo("America/New_York"),
+            TargetTimeZone = TZConvert.GetTimeZoneInfo("Europe/Berlin")
         };
 
         var result = await service.ConvertTimeAsync(input);
@@ -112,9 +113,9 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         var service = new TimeConversionService(Logger);
 
         var originTime = new DateTime(2026, 2, 21, 8, 0, 0);
-        var originTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
+        var originTimeZone = TZConvert.GetTimeZoneInfo("America/New_York");
         var expectedTime = new DateTime(2026, 2, 21, 14, 0, 0);
-        var targetTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Berlin");
+        var targetTimeZone = TZConvert.GetTimeZoneInfo("Europe/Berlin");
 
         var input = new TimeConversionInput
         {

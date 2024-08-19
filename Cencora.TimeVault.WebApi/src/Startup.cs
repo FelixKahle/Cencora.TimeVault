@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Cencora.TimeVault.WebApi.Extensions;
 using Cencora.TimeVault.WebApi.Services.TimeConversion;
+using Cencora.TimeVault.WebApi.Services.TimeZone;
 
 namespace Cencora.TimeVault.WebApi;
 
@@ -53,6 +54,7 @@ public sealed class Startup
         services.AddSwaggerGen();
 
         // TimeVault services
+        services.AddTimeZone();
         services.AddTimeConversion();
     }
 

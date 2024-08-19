@@ -5,6 +5,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Cencora.TimeVault.WebApi.Extensions;
+using TimeZoneConverter;
 
 namespace Cencora.TimeVault.WebApi.Models.TimeConversion;
 
@@ -130,11 +131,11 @@ public record TimeConversionRequestDto : IValidatableObject
         }
 
         // Validate the time zones.
-        if (TimeZoneInfo.TryFindSystemTimeZoneById(OriginTimeZone, out _) == false)
+        if (TZConvert.TryGetTimeZoneInfo(OriginTimeZone, out _) == false)
         {
             yield return new ValidationResult("The origin time zone is not valid.", [nameof(OriginTimeZone)]);
         }
-        if (TimeZoneInfo.TryFindSystemTimeZoneById(TargetTimeZone, out _) == false)
+        if (TZConvert.TryGetTimeZoneInfo(TargetTimeZone, out _) == false)
         {
             yield return new ValidationResult("The target time zone is not valid.", [nameof(TargetTimeZone)]);
         }
