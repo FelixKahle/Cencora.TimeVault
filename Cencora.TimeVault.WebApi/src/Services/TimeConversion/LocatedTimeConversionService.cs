@@ -27,7 +27,7 @@ public class LocatedTimeConversionService : ILocatedTimeConversionService
     }
 
     /// <inheritdoc/>
-    public Task<LocatedTimeConversionResult> ConvertTimeAsync(in LocatedTimeConversionInput input)
+    public Task<LocatedTimeConversionResult> ConvertTimeAsync(LocatedTimeConversionInput input)
     {
         throw new NotImplementedException();
     }

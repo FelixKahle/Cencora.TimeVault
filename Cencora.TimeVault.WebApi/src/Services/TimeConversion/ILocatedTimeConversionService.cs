@@ -16,5 +16,5 @@ public interface ILocatedTimeConversionService
     /// </summary>
     /// <param name="input">The input for the time conversion.</param>
     /// <returns>The result of the time conversion.</returns>
-    Task<LocatedTimeConversionResult> ConvertTimeAsync(in LocatedTimeConversionInput input);
+    Task<LocatedTimeConversionResult> ConvertTimeAsync(LocatedTimeConversionInput input);
 }
