@@ -32,7 +32,7 @@ public readonly struct Location
     /// <inheritdoc/>
     public override string ToString()
     {
-        var arr = new string[] { City, StateOrProvince, PostalCode, Country };
+        var arr = new[] { City, StateOrProvince, PostalCode, Country };
         return string.Join(", ", arr.Where(s => !string.IsNullOrWhiteSpace(s)));
     }
 }

@@ -18,8 +18,8 @@ public static class LocationExtensions
     {
         return new Location
         {
-            City = locationDto.City ?? string.Empty,
-            Country = locationDto.Country ?? string.Empty,
+            City = locationDto.City,
+            Country = locationDto.Country,
             PostalCode = locationDto.PostalCode ?? string.Empty,
             StateOrProvince = locationDto.StateOrProvince ?? string.Empty
         };

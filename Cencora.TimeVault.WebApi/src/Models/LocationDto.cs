@@ -36,7 +36,7 @@ public record LocationDto : IValidatableObject
     /// <inheritdoc/>
     public override string ToString()
     {
-        var arr = new string?[]
+        var arr = new[]
         {
             City,
             StateOrProvince,
