@@ -14,7 +14,7 @@ namespace Cencora.TimeVault.WebApi.Controllers.TimeZone;
 /// Controller for time zones.
 /// </summary>
 [ApiController]
-[Route("api/v1/timezone")]
+[Route("timezone")]
 public class TimeZoneController : ControllerBase
 {
     private readonly ITimeZoneService _timeZoneService;
@@ -60,14 +60,11 @@ public class TimeZoneController : ControllerBase
     /// <returns>The IActionResult with the time zone information.</returns>
     private async Task<IActionResult> HandleTimeZoneRequest(TimeZoneRequestDto request)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var model = request.ToModel();
         var result = await _timeZoneService.SearchTimeZoneAsync(model.Location);
 
+        // Ensure that the time zone was found.
+        // If not, return a 404 Not Found response.
         if (result.TimeZone is null)
         {
             return Problem(
@@ -77,6 +74,7 @@ public class TimeZoneController : ControllerBase
             );
         }
 
+        // Return the time zone information.
         var response = new TimeZoneResponse
         {
             Location = result.Location,

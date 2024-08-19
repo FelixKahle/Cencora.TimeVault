@@ -14,7 +14,7 @@ namespace Cencora.TimeVault.WebApi.Controllers.TimeConversion;
 /// Controller for time conversion.
 /// </summary>
 [ApiController]
-[Route("api/v1/time/conversion")]
+[Route("time/conversion")]
 public class TimeConversionController : ControllerBase
 {
     private readonly ITimeConversionService _timeConversionService;
@@ -36,8 +36,7 @@ public class TimeConversionController : ControllerBase
     [Route("timezone")]
     public async Task<IActionResult> GetConvertTime([FromQuery] TimeConversionRequestDto request)
     {
-        var response = await ProcessRequest(request);
-        return Ok(response.ToDto());
+        return await HandleRequest(request);
     }
 
     /// <summary>
@@ -50,16 +49,15 @@ public class TimeConversionController : ControllerBase
     [Route("timezone")]
     public async Task<IActionResult> PostConvertTime([FromBody] TimeConversionRequestDto request)
     {
-        var response = await ProcessRequest(request);
-        return Ok(response.ToDto());
+        return await HandleRequest(request);
     }
 
     /// <summary>
     /// Processes a time conversion request.
     /// </summary>
     /// <param name="request">The request to process.</param>
-    /// <returns>The response to the request.</returns>
-    private async Task<TimeConversionResponse> ProcessRequest(TimeConversionRequestDto request)
+    /// <returns>The handled request.</returns>
+    private async Task<IActionResult> HandleRequest(TimeConversionRequestDto request)
     {
         var model = request.ToModel();
         var input = model.ToInput();
@@ -75,6 +73,6 @@ public class TimeConversionController : ControllerBase
             TargetTimeZone = result.TargetTimeZone,
         };
 
-        return response;
+        return Ok(response.ToDto());
     }
 }

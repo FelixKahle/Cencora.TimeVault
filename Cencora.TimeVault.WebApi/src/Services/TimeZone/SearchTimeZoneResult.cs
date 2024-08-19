@@ -24,6 +24,11 @@ public readonly struct SearchTimeZoneResult
     /// </remarks>
     public required TimeZoneInfo? TimeZone { get; init; }
 
+    /// <summary>
+    /// Gets a value indicating whether the time zone was found.
+    /// </summary>
+    public bool IsFound => TimeZone is not null;
+
     /// <inheritdoc/>
     public override string ToString()
     {

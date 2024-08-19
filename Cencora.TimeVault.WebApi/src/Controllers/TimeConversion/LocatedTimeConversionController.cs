@@ -14,7 +14,7 @@ namespace Cencora.TimeVault.WebApi.Controllers.TimeConversion;
 /// Controller for time conversion based on the location of the origin and target.
 /// </summary>
 [ApiController]
-[Route("api/v1/time/conversion")]
+[Route("time/conversion")]
 public class LocatedTimeConversionController : ControllerBase
 {
     private readonly ILocatedTimeConversionService _locatedTimeConversionService;
@@ -41,8 +41,7 @@ public class LocatedTimeConversionController : ControllerBase
     [Route("location")]
     public async Task<IActionResult> GetLocatedConvertTime([FromQuery] LocatedTimeConversionRequestDto request)
     {
-        var response = await ProcessRequest(request);
-        return Ok(response);
+        return await HandleRequest(request);
     }
 
     /// <summary>
@@ -53,18 +52,17 @@ public class LocatedTimeConversionController : ControllerBase
     [HttpPost]
     [Consumes("application/json")]
     [Route("location")]
-    public IActionResult PostLocatedConvertTime([FromBody] LocatedTimeConversionRequestDto request)
+    public async Task<IActionResult> PostLocatedConvertTime([FromBody] LocatedTimeConversionRequestDto request)
     {
-        var response = ProcessRequest(request);
-        return Ok(response);
+        return await HandleRequest(request);
     }
 
     /// <summary>
     /// Processes a located time conversion request.
     /// </summary>
     /// <param name="request">The request to process.</param>
-    /// <returns>The response to the request.</returns>
-    private async Task<LocatedTimeConversionResponse> ProcessRequest(LocatedTimeConversionRequestDto request)
+    /// <returns>The handled request.</returns>
+    private async Task<IActionResult> HandleRequest(LocatedTimeConversionRequestDto request)
     {
         var model = request.ToModel();
         var input = model.ToInput();
@@ -82,6 +80,6 @@ public class LocatedTimeConversionController : ControllerBase
             TargetLocation = model.TargetLocation,
         };
 
-        return response;
+        return Ok(response.ToDto());
     }
 }

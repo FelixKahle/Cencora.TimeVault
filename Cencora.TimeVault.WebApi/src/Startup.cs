@@ -2,8 +2,6 @@
 //
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Cencora.TimeVault.WebApi.Extensions;
 using Cencora.TimeVault.WebApi.Services.TimeConversion;
 using Cencora.TimeVault.WebApi.Services.TimeZone;
@@ -35,20 +33,13 @@ public sealed class Startup
     /// <param name="services">The collection of services to configure.</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddLogging(builder => builder.Configure(options =>
+        // Add services
+        services.AddGlobalExceptionHandler();
+        services.AddCustomLogging();
+        services.AddControllers(options =>
         {
-            options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId |
-                                              ActivityTrackingOptions.ParentId | ActivityTrackingOptions.Baggage |
-                                              ActivityTrackingOptions.Tags;
-        }));
-        services.AddControllers();
-        services.AddProblemDetails();
-        services.ConfigureJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-            options.JsonSerializerOptions.AllowTrailingCommas = true;
+            // We want to add a route prefix to all controllers.
+            options.Conventions.Add(new RoutePrefixConvention("api/v1"));
         });
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
@@ -56,6 +47,9 @@ public sealed class Startup
         // TimeVault services
         services.AddTimeZone();
         services.AddTimeConversion();
+
+        // Configuration
+        services.ConfigureJsonOptions();
     }
 
     /// <summary>
@@ -65,6 +59,10 @@ public sealed class Startup
     /// <param name="env">The web hosting environment.</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseHttpsRedirection();
+        app.UseStatusCodePages();
+        app.UseGlobalExceptionHandler();
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -72,9 +70,6 @@ public sealed class Startup
             app.UseSwaggerUI();
         }
 
-        app.UseExceptionHandler();
-        app.UseStatusCodePages();
-        app.UseHttpsRedirection();
         app.UseRouting();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }

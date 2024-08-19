@@ -11,6 +11,7 @@ namespace Cencora.TimeVault.WebApi.Services.TimeZone;
 /// </summary>
 public class TimeZoneService : ITimeZoneService
 {
+    // ReSharper disable once NotAccessedField.Local
     private readonly ILogger<TimeZoneService> _logger;
 
     /// <summary>
