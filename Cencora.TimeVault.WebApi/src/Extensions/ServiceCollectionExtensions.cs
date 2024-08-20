@@ -29,6 +29,20 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds custom Swagger generation to the application.
+    /// </summary>
+    /// <param name="services">The collection of services to configure.</param>
+    /// <returns>The collection of services.</returns>
+    public static IServiceCollection AddCustomSwaggerGen(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            options.OperationFilter<SnakeCaseParamOperationFilter>();
+        });
+        return services;
+    }
+
+    /// <summary>
     /// Configures the <see cref="JsonOptions"/> using the specified configuration.
     /// </summary>
     /// <param name="services">The collection of services to configure.</param>

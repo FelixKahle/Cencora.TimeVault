@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Cencora.TimeVault.WebApi.Extensions;
 
@@ -47,5 +48,21 @@ public static class StringExtensions
     public static bool AllNullOrWhiteSpace(this IEnumerable<string?> values)
     {
         return values.All(string.IsNullOrWhiteSpace);
+    }
+
+    /// <summary>
+    /// Converts the specified string to snake case.
+    /// </summary>
+    /// <param name="str">The string to convert.</param>
+    /// <returns>The string in snake case.</returns>
+    public static string ToSnakeCase(this string str)
+    {
+        if (string.IsNullOrEmpty(str))
+        {
+            return str;
+        }
+
+        var snakeCase = Regex.Replace(str, @"([a-z0-9])([A-Z])", "$1_$2").ToLower();
+        return snakeCase;
     }
 }

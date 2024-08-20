@@ -42,7 +42,7 @@ public sealed class Startup
             options.Conventions.Add(new RoutePrefixConvention("api/v1"));
         });
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddCustomSwaggerGen();
 
         // TimeVault services
         services.AddTimeZone();
