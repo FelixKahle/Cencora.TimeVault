@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using Cencora.TimeVault.WebApi.Models;
+using LanguageExt.Common;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeZone;
 
@@ -12,9 +13,9 @@ namespace Cencora.TimeVault.WebApi.Services.TimeZone;
 public interface ITimeZoneService
 {
     /// <summary>
-    /// Searches for a time zone based on the given location.
+    /// Searches for a time zone for the specified location.
     /// </summary>
     /// <param name="location">The location to search for.</param>
     /// <returns>The result of the search.</returns>
-    public Task<SearchTimeZoneResult> SearchTimeZoneAsync(Location location);
+    public Task<Result<TimeZoneInfo>> SearchTimeZoneAsync(Location location);
 }

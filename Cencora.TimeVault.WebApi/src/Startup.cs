@@ -42,7 +42,7 @@ public sealed class Startup
             options.Conventions.Add(new RoutePrefixConvention("api/v1"));
         });
         services.AddEndpointsApiExplorer();
-        services.AddCustomSwaggerGen();
+        services.AddSwaggerGen();
 
         // TimeVault services
         services.AddTimeZone();
@@ -59,13 +59,13 @@ public sealed class Startup
     /// <param name="env">The web hosting environment.</param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseGlobalExceptionHandler();
         app.UseHttpsRedirection();
         app.UseStatusCodePages();
-        app.UseGlobalExceptionHandler();
 
         if (env.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
         }

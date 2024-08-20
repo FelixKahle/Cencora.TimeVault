@@ -2,6 +2,8 @@
 //
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
+using LanguageExt.Common;
+
 namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
 
 /// <summary>
@@ -14,5 +16,5 @@ public interface ITimeConversionService
     /// </summary>
     /// <param name="input">The input for the conversion.</param>
     /// <returns>The result of the conversion.</returns>
-    Task<TimeConversionResult> ConvertTimeAsync(TimeConversionInput input);
+    Task<Result<DateTime>> ConvertTimeAsync(TimeConversionInput input);
 }

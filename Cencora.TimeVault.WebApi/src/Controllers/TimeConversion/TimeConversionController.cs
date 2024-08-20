@@ -62,23 +62,47 @@ public class TimeConversionController : ControllerBase
         var model = request.ToModel();
         var input = model.ToInput();
         var result = await _timeConversionService.ConvertTimeAsync(input);
-        return result.ConvertedTime.Match<IActionResult>(convertedTime =>
+
+        return result.Match(
+            Succ: dateTime =>
             {
                 var response = new TimeConversionResponse
                 {
-                    ConvertedTime = convertedTime,
+                    ConvertedTime = dateTime,
                     ConvertedTimeFormat = model.ConvertedTimeFormat,
-                    OriginTime = result.OriginTime,
+                    OriginTime = input.OriginTime,
                     OriginTimeFormat = model.OriginResponseTimeFormat,
-                    OriginTimeZone = result.OriginTimeZone,
-                    TargetTimeZone = result.TargetTimeZone
+                    OriginTimeZone = input.OriginTimeZone,
+                    TargetTimeZone = input.TargetTimeZone
                 };
                 return Ok(response.ToDto());
             },
-            () => Problem(
-                title: "Time conversion failed",
-                detail: $"Time conversion failed for {input}",
+            Fail: error => CreateProblem(error)
+        );
+    }
+
+    /// <summary>
+    /// Creates a problem response for an exception.
+    /// </summary>
+    /// <param name="exception">The exception to create a problem response for.</param>
+    /// <returns>The problem response.</returns>
+    private ObjectResult CreateProblem(Exception exception)
+    {
+        return exception switch
+        {
+            TimeZoneNotFoundException timeZoneNotFoundException => Problem(
+                detail: timeZoneNotFoundException.Message,
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Time zone not found"
+            ),
+            TimeConversionException timeConversionException => Problem(
+                detail: timeConversionException.Message,
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Time conversion failed"
+            ),
+            _ => Problem(
                 statusCode: StatusCodes.Status500InternalServerError
-            ));
+            )
+        };
     }
 }

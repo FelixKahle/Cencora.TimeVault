@@ -4,6 +4,7 @@
 
 using Cencora.TimeVault.WebApi.Models.TimeConversion;
 using Cencora.TimeVault.WebApi.Services.TimeConversion;
+using Cencora.TimeVault.WebApi.Services.TimeZone;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cencora.TimeVault.WebApi.Controllers.TimeConversion;
@@ -67,36 +68,56 @@ public class LocatedTimeConversionController : ControllerBase
         var model = request.ToModel();
         var input = model.ToInput();
         var result = await _locatedTimeConversionService.ConvertTimeAsync(input);
-        return result.OriginTimeZone.Match<IActionResult>(originTimeZone => result.TargetTimeZone.Match<IActionResult>(
-                targetTimeZone => result.ConvertedTime.Match<IActionResult>(convertedTime =>
-                    {
-                        var response = new LocatedTimeConversionResponse
-                        {
-                            ConvertedTime = convertedTime,
-                            ConvertedTimeFormat = model.ConvertedTimeFormat,
-                            OriginTime = result.OriginTime,
-                            OriginTimeFormat = model.OriginResponseTimeFormat,
-                            OriginTimeZone = originTimeZone,
-                            TargetTimeZone = targetTimeZone,
-                            OriginLocation = result.OriginLocation,
-                            TargetLocation = result.TargetLocation
-                        };
-                        return Ok(response.ToDto());
-                    },
-                    () => Problem(
-                        detail: $"Could not convert time from {originTimeZone} to {targetTimeZone}.",
-                        statusCode: StatusCodes.Status400BadRequest,
-                        title: "Time conversion failed"
-                    )),
-                () => Problem(
-                    detail: $"No time zone found for target location {model.TargetLocation}.",
-                    statusCode: StatusCodes.Status404NotFound,
-                    title: "Time zone not found"
-                )),
-            () => Problem(
-                detail: $"No time zone found for origin location {model.OriginLocation}.",
+
+
+        return result.Match(
+            Succ: conversionResult =>
+            {
+                var response = new LocatedTimeConversionResponse
+                {
+                    ConvertedTime = conversionResult.ConvertedTime,
+                    ConvertedTimeFormat = model.ConvertedTimeFormat,
+                    OriginTime = model.OriginTime,
+                    OriginTimeFormat = model.OriginResponseTimeFormat,
+                    OriginTimeZone = conversionResult.OriginTimeZone,
+                    TargetTimeZone = conversionResult.TargetTimeZone,
+                    OriginLocation = model.OriginLocation,
+                    TargetLocation = model.TargetLocation
+                };
+
+                return Ok(response.ToDto());
+            },
+            Fail: error => CreateProblem(error)
+        );
+    }
+
+    /// <summary>
+    /// Creates a problem response for an exception.
+    /// </summary>
+    /// <param name="exception">The exception to create a problem response for.</param>
+    /// <returns>The problem response.</returns>
+    private ObjectResult CreateProblem(Exception exception)
+    {
+        return exception switch
+        {
+            TimeZoneNotFoundException timeZoneNotFoundException => Problem(
+                detail: timeZoneNotFoundException.Message,
                 statusCode: StatusCodes.Status404NotFound,
                 title: "Time zone not found"
-            ));
+            ),
+            LocationNotFoundException locationNotFoundException => Problem(
+                detail: locationNotFoundException.Message,
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Location not found"
+            ),
+            TimeConversionException timeConversionException => Problem(
+                detail: timeConversionException.Message,
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Time conversion failed"
+            ),
+            _ => Problem(
+                statusCode: StatusCodes.Status500InternalServerError
+            )
+        };
     }
 }

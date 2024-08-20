@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using Cencora.TimeVault.WebApi.Models;
+using LanguageExt.Common;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeZone;
 
@@ -26,8 +27,8 @@ public class TimeZoneService : ITimeZoneService
     }
 
     /// <inheritdoc/>
-    public Task<SearchTimeZoneResult> SearchTimeZoneAsync(Location location)
+    public Task<Result<TimeZoneInfo>> SearchTimeZoneAsync(Location location)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(new Result<TimeZoneInfo>(new LocationNotFoundException(location)));
     }
 }

@@ -26,6 +26,7 @@ public class TimeZoneController : ControllerBase
     public TimeZoneController(ITimeZoneService timeZoneService)
     {
         ArgumentNullException.ThrowIfNull(timeZoneService, nameof(timeZoneService));
+
         _timeZoneService = timeZoneService;
     }
 
@@ -63,20 +64,43 @@ public class TimeZoneController : ControllerBase
         var model = request.ToModel();
         var result = await _timeZoneService.SearchTimeZoneAsync(model.Location);
 
-        return result.TimeZone.Match(timeZone =>
+        return result.Match(
+            Succ: timeZone =>
             {
                 var response = new TimeZoneResponse
                 {
-                    Location = result.Location,
+                    Location = model.Location,
                     TimeZone = timeZone
                 };
 
                 return Ok(response.ToDto());
             },
-            () => Problem(
-                detail: $"Could not find time zone for location {model.Location}.",
-                statusCode: StatusCodes.Status500InternalServerError,
+            Fail: error => CreateProblem(error)
+        );
+    }
+
+    /// <summary>
+    /// Creates a problem response for an exception.
+    /// </summary>
+    /// <param name="exception">The exception to create a problem response for.</param>
+    /// <returns>The problem response.</returns>
+    private ObjectResult CreateProblem(Exception exception)
+    {
+        return exception switch
+        {
+            LocationNotFoundException locationNotFoundException => Problem(
+                detail: locationNotFoundException.Message,
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Location not found"
+            ),
+            TimeZoneNotFoundException timeZoneNotFoundException => Problem(
+                detail: timeZoneNotFoundException.Message,
+                statusCode: StatusCodes.Status404NotFound,
                 title: "Time zone not found"
-            ));
+            ),
+            _ => Problem(
+                statusCode: StatusCodes.Status500InternalServerError
+            )
+        };
     }
 }

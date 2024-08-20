@@ -33,21 +33,9 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
     }
 
     [Fact]
-    public void Constructor_WithValidArguments_InitializesLogger()
-    {
-        Assert.NotNull(new TimeConversionService(Logger));
-    }
-
-    [Fact]
-    public void Constructor_WithNullLogger_ThrowsArgumentNullException()
-    {
-        Assert.Throws<ArgumentNullException>(() => new TimeConversionService(null!));
-    }
-
-    [Fact]
     public async Task ConvertTime_CurrentTimeWithEqualTimeZones_ReturnsInputTime()
     {
-        var service = new TimeConversionService(Logger);
+        var service = new TimeConversionService();
         var input = new TimeConversionInput
         {
             OriginTime = DateTime.Now,
@@ -56,39 +44,16 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         };
 
         var result = await service.ConvertTimeAsync(input);
+        var time = result.IfFail(error => throw error);
 
-        var convertedTime = result.ConvertedTime.IfNone(() => throw new Exception("Converted time is none"));
-
-        Assert.Equal(DateTime.Now, convertedTime, Toleration);
-        Assert.Equal(input.OriginTime, convertedTime, Toleration);
-        Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
-        Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
-        Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
-    }
-
-    [Fact]
-    public async Task ConvertTime_CurrentTimeWithDifferentTimeZones_ReturnsConvertedTime()
-    {
-        var service = new TimeConversionService(Logger);
-        var input = new TimeConversionInput
-        {
-            OriginTime = DateTime.Now,
-            OriginTimeZone = TimeZoneInfo.Local,
-            TargetTimeZone = TimeZoneInfo.Utc
-        };
-
-        var result = await service.ConvertTimeAsync(input);
-
-        Assert.Equal(DateTime.Now, result.OriginTime, Toleration);
-        Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
-        Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
-        Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
+        Assert.Equal(DateTime.Now, time, Toleration);
+        Assert.Equal(input.OriginTime, time, Toleration);
     }
 
     [Fact]
     public async Task ConvertTime_PastTimeWithDifferentTimeZones_ReturnsConvertedTime()
     {
-        var service = new TimeConversionService(Logger);
+        var service = new TimeConversionService();
         var originalTime = new DateTime(2001, 2, 21, 8, 0, 0);
         var expectedTime = new DateTime(2001, 2, 21, 14, 0, 0);
 
@@ -100,20 +65,15 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         };
 
         var result = await service.ConvertTimeAsync(input);
+        var convertedTime = result.IfFail(error => throw error);
 
-        var convertedTime = result.ConvertedTime.IfNone(() => throw new Exception("Converted time is none"));
-
-        Assert.Equal(originalTime, result.OriginTime, Toleration);
         Assert.Equal(expectedTime, convertedTime, Toleration);
-        Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
-        Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
-        Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
     }
 
     [Fact]
     public async Task ConvertTime_FutureTimeWithDifferentTimeZones_ReturnsConvertedTime()
     {
-        var service = new TimeConversionService(Logger);
+        var service = new TimeConversionService();
 
         var originTime = new DateTime(2026, 2, 21, 8, 0, 0);
         var originTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
@@ -128,13 +88,8 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         };
 
         var result = await service.ConvertTimeAsync(input);
+        var convertedTime = result.IfFail(error => throw error);
 
-        var convertedTime = result.ConvertedTime.IfNone(() => throw new Exception("Converted time is none"));
-
-        Assert.Equal(originTime, result.OriginTime, Toleration);
         Assert.Equal(expectedTime, convertedTime, Toleration);
-        Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
-        Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
-        Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
     }
 }
