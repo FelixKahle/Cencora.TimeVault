@@ -67,32 +67,36 @@ public class LocatedTimeConversionController : ControllerBase
         var model = request.ToModel();
         var input = model.ToInput();
         var result = await _locatedTimeConversionService.ConvertTimeAsync(input);
-        return result.OriginTimeZone.Match<IActionResult>(originTimeZone =>
-                result.TargetTimeZone.Match<IActionResult>(targetTimeZone =>
-                        result.ConvertedTime.Match<IActionResult>(convertedTime =>
-                            {
-                                var response = new LocatedTimeConversionResponse
-                                {
-                                    ConvertedTime = convertedTime,
-                                    ConvertedTimeFormat = model.ConvertedTimeFormat,
-                                    OriginTime = result.OriginTime,
-                                    OriginTimeFormat = model.OriginResponseTimeFormat,
-                                    OriginTimeZone = originTimeZone,
-                                    TargetTimeZone = targetTimeZone,
-                                    OriginLocation = result.OriginLocation,
-                                    TargetLocation = result.TargetLocation
-                                };
-                                return Ok(response.ToDto());
-                            },
-                            () => Problem(
-                                $"Could not convert time from {originTimeZone} to {targetTimeZone}.",
-                                statusCode: StatusCodes.Status400BadRequest,
-                                title: "Time conversion failed")),
-                    () => Problem($"No time zone found for target location {model.TargetLocation}.",
-                        statusCode: StatusCodes.Status404NotFound,
-                        title: "Time zone not found")),
-            () => Problem($"No time zone found for origin location {model.OriginLocation}.",
+        return result.OriginTimeZone.Match<IActionResult>(originTimeZone => result.TargetTimeZone.Match<IActionResult>(
+                targetTimeZone => result.ConvertedTime.Match<IActionResult>(convertedTime =>
+                    {
+                        var response = new LocatedTimeConversionResponse
+                        {
+                            ConvertedTime = convertedTime,
+                            ConvertedTimeFormat = model.ConvertedTimeFormat,
+                            OriginTime = result.OriginTime,
+                            OriginTimeFormat = model.OriginResponseTimeFormat,
+                            OriginTimeZone = originTimeZone,
+                            TargetTimeZone = targetTimeZone,
+                            OriginLocation = result.OriginLocation,
+                            TargetLocation = result.TargetLocation
+                        };
+                        return Ok(response.ToDto());
+                    },
+                    () => Problem(
+                        detail: $"Could not convert time from {originTimeZone} to {targetTimeZone}.",
+                        statusCode: StatusCodes.Status400BadRequest,
+                        title: "Time conversion failed"
+                    )),
+                () => Problem(
+                    detail: $"No time zone found for target location {model.TargetLocation}.",
+                    statusCode: StatusCodes.Status404NotFound,
+                    title: "Time zone not found"
+                )),
+            () => Problem(
+                detail: $"No time zone found for origin location {model.OriginLocation}.",
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Time zone not found"));
+                title: "Time zone not found"
+            ));
     }
 }

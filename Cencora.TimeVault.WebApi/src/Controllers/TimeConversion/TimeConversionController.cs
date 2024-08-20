@@ -26,7 +26,8 @@ public class TimeConversionController : ControllerBase
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="timeConversionService"/> is <see langword="null"/>.</exception>
     public TimeConversionController(ITimeConversionService timeConversionService)
     {
-        ArgumentNullException.ThrowIfNull(timeConversionService, nameof(timeConversionService));
+        ArgumentNullException.ThrowIfNull(timeConversionService,
+            nameof(timeConversionService));
         _timeConversionService = timeConversionService;
     }
 
@@ -74,7 +75,10 @@ public class TimeConversionController : ControllerBase
                 };
                 return Ok(response.ToDto());
             },
-            () => Problem(title: "Time conversion failed", detail: $"Time conversion failed for {input}",
-                statusCode: StatusCodes.Status500InternalServerError));
+            () => Problem(
+                title: "Time conversion failed",
+                detail: $"Time conversion failed for {input}",
+                statusCode: StatusCodes.Status500InternalServerError
+            ));
     }
 }

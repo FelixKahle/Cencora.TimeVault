@@ -74,7 +74,7 @@ public class TimeZoneController : ControllerBase
                 return Ok(response.ToDto());
             },
             () => Problem(
-                $"Could not find time zone for location {model.Location}.",
+                detail: $"Could not find time zone for location {model.Location}.",
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: "Time zone not found"
             ));
