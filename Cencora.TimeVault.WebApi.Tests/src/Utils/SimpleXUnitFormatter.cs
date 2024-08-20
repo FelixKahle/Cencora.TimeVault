@@ -10,7 +10,10 @@ namespace Cencora.TimeVault.WebApi.Tests.Utils;
 public sealed class SimpleXUnitFormatter : IXUnitFormatter
 {
     private const string LogLevelPadding = ": ";
-    private static readonly string MessagePadding = new(' ', GetLogLevelString(LogLevel.Information).Length + LogLevelPadding.Length);
+
+    private static readonly string MessagePadding =
+        new(' ', GetLogLevelString(LogLevel.Information).Length + LogLevelPadding.Length);
+
     private static readonly string NewLineWithMessagePadding = Environment.NewLine + MessagePadding;
 
     private readonly SimpleXUnitFormatterOptions _loggerOptions;
@@ -25,7 +28,8 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     }
 
     /// <inheritdoc/>
-    public void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider? scopeProvider, TextWriter textWriter)
+    public void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider? scopeProvider,
+        TextWriter textWriter)
     {
         var message = logEntry.Formatter(logEntry.State, logEntry.Exception);
         var logLevelString = GetLogLevelString(logEntry.LogLevel);
@@ -39,27 +43,19 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     /// <summary>
     /// Creates and writes the log message to the text writer.
     /// </summary>
-    private void WriteLogMessage<TState>(TextWriter textWriter, in LogEntry<TState> logEntry, string message, IExternalScopeProvider? scopeProvider)
+    private void WriteLogMessage<TState>(TextWriter textWriter, in LogEntry<TState> logEntry, string message,
+        IExternalScopeProvider? scopeProvider)
     {
         textWriter.Write(LogLevelPadding);
         textWriter.Write($"{logEntry.Category}[{logEntry.EventId.Id}]");
 
-        if (!_loggerOptions.SingleLine)
-        {
-            textWriter.WriteLine();
-        }
+        if (!_loggerOptions.SingleLine) textWriter.WriteLine();
 
         WriteScopeInformation(textWriter, scopeProvider);
         WriteMessage(textWriter, message);
 
-        if (logEntry.Exception == null)
-        {
-            return;
-        }
-        if (!_loggerOptions.SingleLine && !string.IsNullOrEmpty(message))
-        {
-            textWriter.WriteLine();
-        }
+        if (logEntry.Exception == null) return;
+        if (!_loggerOptions.SingleLine && !string.IsNullOrEmpty(message)) textWriter.WriteLine();
         WriteMessage(textWriter, logEntry.Exception.ToString());
     }
 
@@ -68,10 +64,7 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     /// </summary>
     private void WriteMessage(TextWriter textWriter, string message)
     {
-        if (string.IsNullOrEmpty(message))
-        {
-            return;
-        }
+        if (string.IsNullOrEmpty(message)) return;
         textWriter.Write(_loggerOptions.SingleLine ? ' ' : MessagePadding);
         textWriter.Write(_loggerOptions.SingleLine
             ? message.Replace(Environment.NewLine, " ")
@@ -83,10 +76,7 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     /// </summary>
     private void WriteScopeInformation(TextWriter textWriter, IExternalScopeProvider? scopeProvider)
     {
-        if (!_loggerOptions.IncludeScopes || scopeProvider == null)
-        {
-            return;
-        }
+        if (!_loggerOptions.IncludeScopes || scopeProvider == null) return;
 
         var isFirstScope = true;
         scopeProvider.ForEachScope((scope, writer) =>
@@ -100,13 +90,11 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
             {
                 writer.Write(" => ");
             }
+
             writer.Write(scope);
         }, textWriter);
 
-        if (!isFirstScope && !_loggerOptions.SingleLine)
-        {
-            textWriter.WriteLine();
-        }
+        if (!isFirstScope && !_loggerOptions.SingleLine) textWriter.WriteLine();
     }
 
     /// <summary>
@@ -115,9 +103,7 @@ public sealed class SimpleXUnitFormatter : IXUnitFormatter
     private void WriteTimestamp(TextWriter textWriter)
     {
         if (_loggerOptions.TimestampFormat != null)
-        {
             textWriter.Write(GetCurrentDateTime().ToString(_loggerOptions.TimestampFormat));
-        }
     }
 
     /// <summary>

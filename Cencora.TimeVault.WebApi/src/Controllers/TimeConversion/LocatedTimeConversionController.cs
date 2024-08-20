@@ -26,8 +26,8 @@ public class LocatedTimeConversionController : ControllerBase
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="locatedTimeConversionService"/> is <see langword="null"/>.</exception>
     public LocatedTimeConversionController(ILocatedTimeConversionService locatedTimeConversionService)
     {
-        ArgumentNullException.ThrowIfNull(locatedTimeConversionService, nameof(locatedTimeConversionService));
-
+        ArgumentNullException.ThrowIfNull(locatedTimeConversionService,
+            nameof(locatedTimeConversionService));
         _locatedTimeConversionService = locatedTimeConversionService;
     }
 
@@ -67,47 +67,32 @@ public class LocatedTimeConversionController : ControllerBase
         var model = request.ToModel();
         var input = model.ToInput();
         var result = await _locatedTimeConversionService.ConvertTimeAsync(input);
-
-        if (result.OriginTimeZone is null)
-        {
-            return Problem(
-                detail: $"No time zone found for origin location {model.OriginLocation}.",
+        return result.OriginTimeZone.Match<IActionResult>(originTimeZone =>
+                result.TargetTimeZone.Match<IActionResult>(targetTimeZone =>
+                        result.ConvertedTime.Match<IActionResult>(convertedTime =>
+                            {
+                                var response = new LocatedTimeConversionResponse
+                                {
+                                    ConvertedTime = convertedTime,
+                                    ConvertedTimeFormat = model.ConvertedTimeFormat,
+                                    OriginTime = result.OriginTime,
+                                    OriginTimeFormat = model.OriginResponseTimeFormat,
+                                    OriginTimeZone = originTimeZone,
+                                    TargetTimeZone = targetTimeZone,
+                                    OriginLocation = result.OriginLocation,
+                                    TargetLocation = result.TargetLocation
+                                };
+                                return Ok(response.ToDto());
+                            },
+                            () => Problem(
+                                $"Could not convert time from {originTimeZone} to {targetTimeZone}.",
+                                statusCode: StatusCodes.Status400BadRequest,
+                                title: "Time conversion failed")),
+                    () => Problem($"No time zone found for target location {model.TargetLocation}.",
+                        statusCode: StatusCodes.Status404NotFound,
+                        title: "Time zone not found")),
+            () => Problem($"No time zone found for origin location {model.OriginLocation}.",
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Time zone not found"
-            );
-        }
-
-        if (result.TargetTimeZone is null)
-        {
-            return Problem(
-                detail: $"No time zone found for target location {model.TargetLocation}.",
-                statusCode: StatusCodes.Status404NotFound,
-                title: "Time zone not found"
-            );
-        }
-
-        if (result.ConvertedTime == null)
-        {
-            return Problem(
-                detail: $"Could not convert time from {result.OriginTimeZone.Id} to {result.TargetTimeZone.Id}.",
-                statusCode: StatusCodes.Status400BadRequest,
-                title: "Time conversion failed"
-            );
-        }
-
-        var response = new LocatedTimeConversionResponse
-        {
-            // It is safe to access the Value property here because the null check was done above.
-            ConvertedTime = result.ConvertedTime.Value,
-            ConvertedTimeFormat = model.ConvertedTimeFormat,
-            OriginTime = result.OriginTime,
-            OriginTimeFormat = model.OriginResponseTimeFormat,
-            OriginTimeZone = result.OriginTimeZone,
-            TargetTimeZone = result.TargetTimeZone,
-            OriginLocation = result.OriginLocation,
-            TargetLocation = result.TargetLocation
-        };
-
-        return Ok(response.ToDto());
+                title: "Time zone not found"));
     }
 }

@@ -42,6 +42,7 @@ public record TimeConversionResponseDto
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{OriginTime}({OriginTimeFormat}) {OriginTimeZone} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetTimeZone}";
+        return
+            $"{OriginTime}({OriginTimeFormat}) {OriginTimeZone} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetTimeZone}";
     }
 }

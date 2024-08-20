@@ -1,6 +1,7 @@
 # Time Conversion
 
-This folder contains a time conversion service. The service provides functionality to convert time between different time zones, ensuring that time-sensitive operations are handled consistently across different regions.
+This folder contains a time conversion service. The service provides functionality to convert time between different
+time zones, ensuring that time-sensitive operations are handled consistently across different regions.
 
 ## Usage
 
@@ -9,11 +10,13 @@ This folder contains a time conversion service. The service provides functionali
 ```csharp
 services.AddTimeConversionService();
 ```
+
 This will register a default implementation with the DI container as a singleton.
 
 ### Invoke Time Conversion:
 
-Use the service in your application by injecting `ITimeConversionService` and calling the `ConvertTime` method with appropriate input:
+Use the service in your application by injecting `ITimeConversionService` and calling the `ConvertTime` method with
+appropriate input:
 
 ```csharp
 var result = _timeConversionService.ConvertTime(new TimeConversionInput
@@ -28,7 +31,8 @@ Console.WriteLine($"Converted Time: {result.ConvertedTime}");
 
 ## Custom Time Conversion Service Implementation
 
-If the default time conversion logic doesn't meet your specific requirements, you can implement your own service by following these steps:
+If the default time conversion logic doesn't meet your specific requirements, you can implement your own service by
+following these steps:
 
 ### Create a Custom Service:
 
@@ -47,11 +51,13 @@ public class CustomTimeConversionService : ITimeConversionService
 
 ### Register the Custom Service:
 
-Replace the default TimeConversionService with your custom implementation in the DI container, typically done in **Startup.cs** or **Program.cs**:
+Replace the default TimeConversionService with your custom implementation in the DI container, typically done in *
+*Startup.cs** or **Program.cs**:
 
 ```csharp
 services.AddTransient<ITimeConversionService, CustomTimeConversionService>();
 ```
+
 Or use one the provided shortcut, this will register your implementation as a singleton in the DI container:
 
 ```csharp

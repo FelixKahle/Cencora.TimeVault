@@ -2,6 +2,7 @@
 //
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
+using LanguageExt;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
@@ -31,7 +32,6 @@ public class TimeConversionService : ITimeConversionService
     public TimeConversionService(ILogger<TimeConversionService> logger)
     {
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
-
         _logger = logger;
     }
 
@@ -42,38 +42,37 @@ public class TimeConversionService : ITimeConversionService
         var originTimeZone = input.OriginTimeZone;
         var targetTimeZone = input.TargetTimeZone;
 
-        try
+        var tryConvertTime = new Try<TimeConversionResult>(() =>
         {
             var originDateTime = DateTime.SpecifyKind(time, DateTimeKind.Unspecified);
             var convertedTime = TimeZoneInfo.ConvertTime(originDateTime, originTimeZone, targetTimeZone);
-
-            var result = new TimeConversionResult
+            return new TimeConversionResult
             {
                 ConvertedTime = convertedTime,
                 OriginTime = time,
                 OriginTimeZone = originTimeZone,
                 TargetTimeZone = targetTimeZone
             };
-            
+        });
+
+        return tryConvertTime.Match(result =>
+        {
             // Log some arbitrary information
             _logger.LogInformation("Converted {result}", result);
-
             return Task.FromResult(result);
-        }
-        catch (Exception ex)
+        }, ex =>
         {
             var result = new TimeConversionResult
             {
-                ConvertedTime = null,
+                ConvertedTime = Option<DateTime>.None,
                 OriginTime = time,
                 OriginTimeZone = originTimeZone,
-                TargetTimeZone = targetTimeZone,
+                TargetTimeZone = targetTimeZone
             };
 
             // Log the error
             _logger.LogError(ex, "Failed to convert {result}", result);
-
             return Task.FromResult(result);
-        }
+        });
     }
 }

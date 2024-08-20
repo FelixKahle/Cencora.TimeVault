@@ -87,56 +87,37 @@ public record TimeConversionRequestDto : IValidatableObject
     {
         // Validate the origin time, time zone, and time format.
         if (string.IsNullOrWhiteSpace(OriginTime))
-        {
             yield return new ValidationResult("The origin time is required.", [nameof(OriginTime)]);
-        }
         if (string.IsNullOrWhiteSpace(OriginTimeZone))
-        {
             yield return new ValidationResult("The origin time zone is required.", [nameof(OriginTimeZone)]);
-        }
         if (string.IsNullOrWhiteSpace(OriginTimeFormat))
-        {
             yield return new ValidationResult("The origin time format is required.", [nameof(OriginTimeFormat)]);
-        }
 
         // Validate the target time strings.
         if (string.IsNullOrWhiteSpace(TargetTimeZone))
-        {
             yield return new ValidationResult("The target time zone is required.", [nameof(TargetTimeZone)]);
-        }
         if (string.IsNullOrWhiteSpace(ConvertedTimeFormat))
-        {
             yield return new ValidationResult("The converted time format is required.", [nameof(ConvertedTimeFormat)]);
-        }
 
         // Validate the time formats.
         if (OriginTimeFormat.IsValidDateTimeFormat() == false)
-        {
             yield return new ValidationResult("The origin time format is not valid.", [nameof(OriginTimeFormat)]);
-        }
         if (ConvertedTimeFormat.IsValidDateTimeFormat() == false)
-        {
             yield return new ValidationResult("The converted time format is not valid.", [nameof(ConvertedTimeFormat)]);
-        }
         if (OriginResponseTimeFormat.IsValidDateTimeFormat() == false)
-        {
-            yield return new ValidationResult("The origin response time format is not valid.", [nameof(OriginResponseTimeFormat)]);
-        }
+            yield return new ValidationResult("The origin response time format is not valid.",
+                [nameof(OriginResponseTimeFormat)]);
 
         // Check we can the origin time using the origin time format.
-        if (DateTime.TryParseExact(OriginTime, OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _) == false)
-        {
-            yield return new ValidationResult($"The origin time is not in the specified format: {OriginTimeFormat}.", [nameof(OriginTime)]);
-        }
+        if (DateTime.TryParseExact(OriginTime, OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                out _) == false)
+            yield return new ValidationResult($"The origin time is not in the specified format: {OriginTimeFormat}.",
+                [nameof(OriginTime)]);
 
         // Validate the time zones.
         if (TimeZoneInfo.TryFindSystemTimeZoneById(OriginTimeZone, out _) == false)
-        {
             yield return new ValidationResult("The origin time zone is not valid.", [nameof(OriginTimeZone)]);
-        }
         if (TimeZoneInfo.TryFindSystemTimeZoneById(TargetTimeZone, out _) == false)
-        {
             yield return new ValidationResult("The target time zone is not valid.", [nameof(TargetTimeZone)]);
-        }
     }
 }

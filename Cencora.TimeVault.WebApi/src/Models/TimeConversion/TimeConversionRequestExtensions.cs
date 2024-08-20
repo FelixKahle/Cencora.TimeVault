@@ -21,11 +21,12 @@ public static class TimeConversionRequestExtensions
     {
         return new TimeConversionRequest
         {
-            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
+            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture,
+                DateTimeStyles.None),
             OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
             TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
             ConvertedTimeFormat = request.ConvertedTimeFormat,
-            OriginResponseTimeFormat = request.OriginTimeFormat,
+            OriginResponseTimeFormat = request.OriginTimeFormat
         };
     }
 
@@ -40,7 +41,7 @@ public static class TimeConversionRequestExtensions
         {
             OriginTime = request.OriginTime,
             OriginTimeZone = request.OriginTimeZone,
-            TargetTimeZone = request.TargetTimeZone,
+            TargetTimeZone = request.TargetTimeZone
         };
     }
 
@@ -53,9 +54,10 @@ public static class TimeConversionRequestExtensions
     {
         return new TimeConversionInput
         {
-            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
+            OriginTime = DateTime.ParseExact(request.OriginTime, request.OriginTimeFormat, CultureInfo.InvariantCulture,
+                DateTimeStyles.None),
             OriginTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.OriginTimeZone),
-            TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone),
+            TargetTimeZone = TimeZoneInfo.FindSystemTimeZoneById(request.TargetTimeZone)
         };
     }
 }

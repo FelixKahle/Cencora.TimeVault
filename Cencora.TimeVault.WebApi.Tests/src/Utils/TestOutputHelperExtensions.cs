@@ -21,7 +21,8 @@ public static class TestOutputHelperExtensions
     /// <param name="formatter">The formatter to use for log messages.</param>
     /// <param name="scopeProvider">The scope provider to use for log messages.</param>
     /// <returns>An instance of an XUnit logger.</returns>
-    public static XUnitLogger<T> BuildLoggerFor<T>(this ITestOutputHelper output, string name, IXUnitFormatter formatter, IExternalScopeProvider scopeProvider)
+    public static XUnitLogger<T> BuildLoggerFor<T>(this ITestOutputHelper output, string name,
+        IXUnitFormatter formatter, IExternalScopeProvider scopeProvider)
     {
         return new XUnitLogger<T>(name, formatter, scopeProvider, output);
     }

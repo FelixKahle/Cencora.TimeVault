@@ -2,6 +2,8 @@
 //
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
+using LanguageExt;
+
 namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
 
 /// <summary>
@@ -12,7 +14,7 @@ public readonly struct TimeConversionResult
     /// <summary>
     /// Gets or sets the converted time.
     /// </summary>
-    public required DateTime? ConvertedTime { get; init; }
+    public required Option<DateTime> ConvertedTime { get; init; }
 
     /// <summary>
     /// Gets or sets the origin time.

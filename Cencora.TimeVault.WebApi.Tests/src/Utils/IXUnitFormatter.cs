@@ -19,5 +19,6 @@ public interface IXUnitFormatter
     /// <param name="logEntry">The log entry to write.</param>
     /// <param name="scopeProvider">The scope provider.</param>
     /// <param name="textWriter">The text writer to write to.</param>
-    public void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider scopeProvider, TextWriter textWriter);
+    public void Write<TState>(in LogEntry<TState> logEntry, IExternalScopeProvider scopeProvider,
+        TextWriter textWriter);
 }

@@ -22,7 +22,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddLogging(builder => builder.Configure(options =>
         {
-            options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId | ActivityTrackingOptions.Tags;
+            options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId | ActivityTrackingOptions.TraceId |
+                                              ActivityTrackingOptions.Tags;
         }));
         return services;
     }
@@ -34,7 +35,8 @@ public static class ServiceCollectionExtensions
     /// <param name="configure">The configuration to apply.</param>
     /// <returns>The collection of services.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> or <paramref name="configure"/> is <see langword="null"/>.</exception>
-    public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services, Action<JsonOptions> configure)
+    public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services,
+        Action<JsonOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(services, nameof(services));
         ArgumentNullException.ThrowIfNull(configure, nameof(configure));

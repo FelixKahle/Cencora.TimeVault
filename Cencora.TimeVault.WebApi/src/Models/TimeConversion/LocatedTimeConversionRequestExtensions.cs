@@ -21,11 +21,12 @@ public static class LocatedTimeConversionRequestExtensions
     {
         return new LocatedTimeConversionRequest
         {
-            OriginTime = DateTime.ParseExact(dto.OriginTime, dto.OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None),
+            OriginTime = DateTime.ParseExact(dto.OriginTime, dto.OriginTimeFormat, CultureInfo.InvariantCulture,
+                DateTimeStyles.None),
             OriginLocation = dto.OriginLocation.ToModel(),
             TargetLocation = dto.TargetLocation.ToModel(),
             ConvertedTimeFormat = dto.ConvertedTimeFormat,
-            OriginResponseTimeFormat = dto.OriginResponseTimeFormat,
+            OriginResponseTimeFormat = dto.OriginResponseTimeFormat
         };
     }
 
@@ -40,7 +41,7 @@ public static class LocatedTimeConversionRequestExtensions
         {
             OriginTime = request.OriginTime,
             OriginLocation = request.OriginLocation,
-            TargetLocation = request.TargetLocation,
+            TargetLocation = request.TargetLocation
         };
     }
 }

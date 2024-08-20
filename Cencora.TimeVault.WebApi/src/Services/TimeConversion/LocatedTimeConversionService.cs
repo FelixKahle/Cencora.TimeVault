@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using Cencora.TimeVault.WebApi.Services.TimeZone;
+using LanguageExt;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
 
@@ -14,6 +15,7 @@ public class LocatedTimeConversionService : ILocatedTimeConversionService
 {
     // ReSharper disable once NotAccessedField.Local
     private readonly ITimeConversionService _timeConversionService;
+
     // ReSharper disable once NotAccessedField.Local
     private readonly ITimeZoneService _timeZoneService;
 
@@ -23,10 +25,13 @@ public class LocatedTimeConversionService : ILocatedTimeConversionService
     /// <param name="timeConversionService">The time conversion service.</param>
     /// <param name="timeZoneService">The time zone service.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="timeConversionService"/> or <paramref name="timeZoneService"/> is <see langword="null"/>.</exception>
-    public LocatedTimeConversionService(ITimeConversionService timeConversionService, ITimeZoneService timeZoneService)
+    public LocatedTimeConversionService(ITimeConversionService timeConversionService,
+        ITimeZoneService timeZoneService)
     {
-        ArgumentNullException.ThrowIfNull(timeConversionService, nameof(timeConversionService));
-        ArgumentNullException.ThrowIfNull(timeZoneService, nameof(timeZoneService));
+        ArgumentNullException.ThrowIfNull(timeConversionService,
+            nameof(timeConversionService));
+        ArgumentNullException.ThrowIfNull(timeZoneService,
+            nameof(timeZoneService));
 
         _timeConversionService = timeConversionService;
         _timeZoneService = timeZoneService;
@@ -38,36 +43,51 @@ public class LocatedTimeConversionService : ILocatedTimeConversionService
         var originTimeZoneResult = await _timeZoneService.SearchTimeZoneAsync(input.OriginLocation);
         var targetTimeZoneResult = await _timeZoneService.SearchTimeZoneAsync(input.TargetLocation);
 
-        if (originTimeZoneResult.TimeZone is null || targetTimeZoneResult.TimeZone is null)
-        {
-            return new LocatedTimeConversionResult
+        var originTimeZone = originTimeZoneResult.TimeZone;
+        var targetTimeZone = targetTimeZoneResult.TimeZone;
+
+        return await originTimeZone.Match(
+            originTz => targetTimeZone.Match(
+                async targetTz =>
+                {
+                    var timeConversionInput = new TimeConversionInput
+                    {
+                        OriginTime = input.OriginTime,
+                        OriginTimeZone = originTz,
+                        TargetTimeZone = targetTz
+                    };
+
+                    var convertedTime = await _timeConversionService.ConvertTimeAsync(timeConversionInput);
+
+                    return new LocatedTimeConversionResult
+                    {
+                        ConvertedTime = convertedTime.ConvertedTime,
+                        OriginTime = input.OriginTime,
+                        OriginLocation = input.OriginLocation,
+                        TargetLocation = input.TargetLocation,
+                        OriginTimeZone = originTz,
+                        TargetTimeZone = targetTz
+                    };
+                },
+                () => Task.FromResult(new LocatedTimeConversionResult
+                {
+                    ConvertedTime = Option<DateTime>.None,
+                    OriginTime = input.OriginTime,
+                    OriginLocation = input.OriginLocation,
+                    TargetLocation = input.TargetLocation,
+                    OriginTimeZone = originTimeZone,
+                    TargetTimeZone = targetTimeZone
+                })
+            ),
+            () => Task.FromResult(new LocatedTimeConversionResult
             {
-                ConvertedTime = null,
+                ConvertedTime = Option<DateTime>.None,
                 OriginTime = input.OriginTime,
-                OriginTimeZone = originTimeZoneResult.TimeZone,
-                TargetTimeZone = targetTimeZoneResult.TimeZone,
                 OriginLocation = input.OriginLocation,
-                TargetLocation = input.TargetLocation
-            };
-        }
-
-        var convertTimeInput = new TimeConversionInput
-        {
-            OriginTime = input.OriginTime,
-            OriginTimeZone = originTimeZoneResult.TimeZone,
-            TargetTimeZone = targetTimeZoneResult.TimeZone
-        };
-
-        var convertedTime = await _timeConversionService.ConvertTimeAsync(convertTimeInput);
-
-        return new LocatedTimeConversionResult
-        {
-            ConvertedTime = convertedTime.ConvertedTime,
-            OriginTime = input.OriginTime,
-            OriginTimeZone = originTimeZoneResult.TimeZone,
-            TargetTimeZone = targetTimeZoneResult.TimeZone,
-            OriginLocation = input.OriginLocation,
-            TargetLocation = input.TargetLocation
-        };
+                TargetLocation = input.TargetLocation,
+                OriginTimeZone = originTimeZone,
+                TargetTimeZone = targetTimeZone
+            })
+        );
     }
 }

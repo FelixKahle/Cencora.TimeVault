@@ -52,6 +52,7 @@ public record LocatedTimeConversionResponseDto
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{OriginTime}({OriginTimeFormat}) {OriginLocation}, {OriginTimeZone} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetLocation}, {TargetTimeZone}";
+        return
+            $"{OriginTime}({OriginTimeFormat}) {OriginLocation}, {OriginTimeZone} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetLocation}, {TargetTimeZone}";
     }
 }

@@ -22,10 +22,7 @@ public static class StringExtensions
     /// </remarks>
     public static bool IsValidDateTimeFormat(this string format)
     {
-        if (string.IsNullOrWhiteSpace(format))
-        {
-            return false;
-        }
+        if (string.IsNullOrWhiteSpace(format)) return false;
 
         try
         {
@@ -33,7 +30,8 @@ public static class StringExtensions
             var sampleDateTime = DateTime.UtcNow.ToString(format, CultureInfo.InvariantCulture);
 
             // Try to parse the sample date and time string using the provided format
-            return DateTime.TryParseExact(sampleDateTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+            return DateTime.TryParseExact(sampleDateTime, format, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                out _);
         }
         catch (FormatException)
         {

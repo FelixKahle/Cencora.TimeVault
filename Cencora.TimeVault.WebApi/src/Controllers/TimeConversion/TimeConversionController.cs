@@ -27,7 +27,6 @@ public class TimeConversionController : ControllerBase
     public TimeConversionController(ITimeConversionService timeConversionService)
     {
         ArgumentNullException.ThrowIfNull(timeConversionService, nameof(timeConversionService));
-
         _timeConversionService = timeConversionService;
     }
 
@@ -62,27 +61,20 @@ public class TimeConversionController : ControllerBase
         var model = request.ToModel();
         var input = model.ToInput();
         var result = await _timeConversionService.ConvertTimeAsync(input);
-
-        if (result.ConvertedTime is null)
-        {
-            return Problem(
-                title: "Time conversion failed",
-                detail: $"Time conversion failed for {input}",
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        
-        var response = new TimeConversionResponse
-        {
-            // Safe to access because we checked for null above
-            ConvertedTime = result.ConvertedTime.Value,
-            ConvertedTimeFormat = model.ConvertedTimeFormat,
-            OriginTime = result.OriginTime,
-            OriginTimeFormat = model.OriginResponseTimeFormat,
-            OriginTimeZone = result.OriginTimeZone,
-            TargetTimeZone = result.TargetTimeZone,
-        };
-
-        return Ok(response.ToDto());
+        return result.ConvertedTime.Match<IActionResult>(convertedTime =>
+            {
+                var response = new TimeConversionResponse
+                {
+                    ConvertedTime = convertedTime,
+                    ConvertedTimeFormat = model.ConvertedTimeFormat,
+                    OriginTime = result.OriginTime,
+                    OriginTimeFormat = model.OriginResponseTimeFormat,
+                    OriginTimeZone = result.OriginTimeZone,
+                    TargetTimeZone = result.TargetTimeZone
+                };
+                return Ok(response.ToDto());
+            },
+            () => Problem(title: "Time conversion failed", detail: $"Time conversion failed for {input}",
+                statusCode: StatusCodes.Status500InternalServerError));
     }
 }

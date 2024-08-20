@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using Cencora.TimeVault.WebApi.Models;
+using LanguageExt;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeZone;
 
@@ -19,21 +20,13 @@ public readonly struct SearchTimeZoneResult
     /// <summary>
     /// Gets the time zone information.
     /// </summary>
-    /// <remarks>
-    /// This property may be <see langword="null"/> if the time zone could not be found.
-    /// </remarks>
-    public required TimeZoneInfo? TimeZone { get; init; }
-
-    /// <summary>
-    /// Gets a value indicating whether the time zone was found.
-    /// </summary>
-    public bool IsFound => TimeZone is not null;
+    public required Option<TimeZoneInfo> TimeZone { get; init; }
 
     /// <inheritdoc/>
     public override string ToString()
     {
-        return TimeZone is not null
-            ? $"{TimeZone.Id} ({Location})"
-            : $"Not found ({Location})";
+        var timezoneId = TimeZone.Match(tz => tz.Id, () => "unknown");
+
+        return $"{Location} -> {timezoneId}";
     }
 }

@@ -3,6 +3,7 @@
 // Written by Felix Kahle, A123234, felix.kahle@worldcourier.de
 
 using Cencora.TimeVault.WebApi.Models;
+using LanguageExt;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
 
@@ -14,7 +15,7 @@ public readonly struct LocatedTimeConversionResult
     /// <summary>
     /// Gets or sets the converted time.
     /// </summary>
-    public required DateTime? ConvertedTime { get; init; }
+    public required Option<DateTime> ConvertedTime { get; init; }
 
     /// <summary>
     /// Gets or sets the origin time.
@@ -24,12 +25,12 @@ public readonly struct LocatedTimeConversionResult
     /// <summary>
     /// Gets or sets the origin time zone.
     /// </summary>
-    public required TimeZoneInfo? OriginTimeZone { get; init; }
+    public required Option<TimeZoneInfo> OriginTimeZone { get; init; }
 
     /// <summary>
     /// Gets or sets the target time zone.
     /// </summary>
-    public required TimeZoneInfo? TargetTimeZone { get; init; }
+    public required Option<TimeZoneInfo> TargetTimeZone { get; init; }
 
     /// <summary>
     /// Gets or sets the origin location.
@@ -44,6 +45,9 @@ public readonly struct LocatedTimeConversionResult
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{OriginTime} {OriginLocation}, {OriginTimeZone?.Id} -> {ConvertedTime} {TargetLocation}, {TargetTimeZone?.Id}";
+        var originTimeZone = OriginTimeZone.Match(tz => tz.Id, () => "unknown");
+        var targetTimeZone = TargetTimeZone.Match(tz => tz.Id, () => "unknown");
+
+        return $"{OriginTime} {OriginLocation}, {originTimeZone} -> {ConvertedTime} {TargetLocation}, {targetTimeZone}";
     }
 }

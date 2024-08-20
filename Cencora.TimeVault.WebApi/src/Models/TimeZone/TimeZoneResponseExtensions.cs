@@ -17,7 +17,7 @@ public static class TimeZoneResponseExtensions
     public static TimeZoneResponseDto ToDto(this TimeZoneResponse response)
     {
         // This id might be a Windows time zone id, an IANA time zone id, or a Rails time zone id.
-        string timeZoneId = response.TimeZone.Id;
+        var timeZoneId = response.TimeZone.Id;
 
         return new TimeZoneResponseDto
         {

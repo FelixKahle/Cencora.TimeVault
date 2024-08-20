@@ -52,6 +52,7 @@ public readonly struct LocatedTimeConversionResponse
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{OriginTime}({OriginTimeFormat}) {OriginLocation}, {OriginTimeZone.Id} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetLocation}, {TargetTimeZone.Id}";
+        return
+            $"{OriginTime}({OriginTimeFormat}) {OriginLocation}, {OriginTimeZone.Id} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetLocation}, {TargetTimeZone.Id}";
     }
 }

@@ -33,10 +33,7 @@ public static class Program
         ArgumentNullException.ThrowIfNull(args, nameof(args));
 
         var hostBuilder = Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
+            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
         return hostBuilder;
     }

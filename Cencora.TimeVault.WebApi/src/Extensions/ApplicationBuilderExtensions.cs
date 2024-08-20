@@ -17,7 +17,7 @@ public static class ApplicationBuilderExtensions
     public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder app)
     {
         app.UseExceptionHandler();
-        
+
         return app;
     }
 }

@@ -31,7 +31,8 @@ public class XUnitLogger<T> : ILogger<T>
     /// <param name="scopeProvider">The scope provider to use for log messages.</param>
     /// <param name="output">The test output helper to write log messages to.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/>, <paramref name="formatter"/>, <paramref name="scopeProvider"/>, or <paramref name="output"/> is <see langword="null"/>.</exception>
-    public XUnitLogger(string name, IXUnitFormatter formatter, IExternalScopeProvider scopeProvider, ITestOutputHelper output)
+    public XUnitLogger(string name, IXUnitFormatter formatter, IExternalScopeProvider scopeProvider,
+        ITestOutputHelper output)
     {
         _name = name ?? throw new ArgumentNullException(nameof(name));
         _formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
@@ -40,7 +41,10 @@ public class XUnitLogger<T> : ILogger<T>
     }
 
     /// <inheritdoc/>
-    public IDisposable BeginScope<TState>(TState state) where TState : notnull => ScopeProvider.Push(state);
+    public IDisposable BeginScope<TState>(TState state) where TState : notnull
+    {
+        return ScopeProvider.Push(state);
+    }
 
     /// <inheritdoc/>
     public bool IsEnabled(LogLevel logLevel)
@@ -49,14 +53,12 @@ public class XUnitLogger<T> : ILogger<T>
     }
 
     /// <inheritdoc/>
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+        Func<TState, Exception?, string> formatter)
     {
         ArgumentNullException.ThrowIfNull(formatter, nameof(formatter));
-        
-        if (!IsEnabled(logLevel))
-        {
-            return;
-        }
+
+        if (!IsEnabled(logLevel)) return;
 
         using var stringWriter = new StringWriter();
         var logEntry = new LogEntry<TState>(logLevel, _name, eventId, state, exception, formatter);
@@ -64,10 +66,7 @@ public class XUnitLogger<T> : ILogger<T>
         var sb = stringWriter.GetStringBuilder();
 
         // Nothing to log
-        if (sb.Length == 0)
-        {
-            return;
-        }
+        if (sb.Length == 0) return;
 
         var computedAnsiString = sb.ToString();
         _output.WriteLine(computedAnsiString);

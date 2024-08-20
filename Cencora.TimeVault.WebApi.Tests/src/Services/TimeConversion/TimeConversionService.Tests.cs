@@ -57,8 +57,10 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
 
         var result = await service.ConvertTimeAsync(input);
 
-        Assert.Equal(DateTime.Now, result.ConvertedTime!.Value, Toleration);
-        Assert.Equal(input.OriginTime, result.ConvertedTime!.Value, Toleration);
+        var convertedTime = result.ConvertedTime.IfNone(() => throw new Exception("Converted time is none"));
+
+        Assert.Equal(DateTime.Now, convertedTime, Toleration);
+        Assert.Equal(input.OriginTime, convertedTime, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
         Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
@@ -99,8 +101,10 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
 
         var result = await service.ConvertTimeAsync(input);
 
+        var convertedTime = result.ConvertedTime.IfNone(() => throw new Exception("Converted time is none"));
+
         Assert.Equal(originalTime, result.OriginTime, Toleration);
-        Assert.Equal(expectedTime, result.ConvertedTime!.Value, Toleration);
+        Assert.Equal(expectedTime, convertedTime, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
         Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
@@ -125,8 +129,10 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
 
         var result = await service.ConvertTimeAsync(input);
 
+        var convertedTime = result.ConvertedTime.IfNone(() => throw new Exception("Converted time is none"));
+
         Assert.Equal(originTime, result.OriginTime, Toleration);
-        Assert.Equal(expectedTime, result.ConvertedTime!.Value, Toleration);
+        Assert.Equal(expectedTime, convertedTime, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
         Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
