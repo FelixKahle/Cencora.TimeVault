@@ -97,7 +97,7 @@ public class TimeConversionController : ControllerBase
             ),
             TimeConversionException timeConversionException => Problem(
                 detail: timeConversionException.Message,
-                statusCode: StatusCodes.Status400BadRequest,
+                statusCode: StatusCodes.Status500InternalServerError,
                 title: "Time conversion failed"
             ),
             _ => Problem(
