@@ -14,7 +14,7 @@ public readonly struct LocatedTimeConversionResult
     /// <summary>
     /// Gets or sets the converted time.
     /// </summary>
-    public required DateTime ConvertedTime { get; init; }
+    public required DateTime? ConvertedTime { get; init; }
 
     /// <summary>
     /// Gets or sets the origin time.
@@ -24,12 +24,12 @@ public readonly struct LocatedTimeConversionResult
     /// <summary>
     /// Gets or sets the origin time zone.
     /// </summary>
-    public required TimeZoneInfo OriginTimeZone { get; init; }
+    public required TimeZoneInfo? OriginTimeZone { get; init; }
 
     /// <summary>
     /// Gets or sets the target time zone.
     /// </summary>
-    public required TimeZoneInfo TargetTimeZone { get; init; }
+    public required TimeZoneInfo? TargetTimeZone { get; init; }
 
     /// <summary>
     /// Gets or sets the origin location.
@@ -44,6 +44,6 @@ public readonly struct LocatedTimeConversionResult
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{OriginTime} {OriginLocation}, {OriginTimeZone.Id} -> {ConvertedTime} {TargetLocation}, {TargetTimeZone.Id}";
+        return $"{OriginTime} {OriginLocation}, {OriginTimeZone?.Id} -> {ConvertedTime} {TargetLocation}, {TargetTimeZone?.Id}";
     }
 }

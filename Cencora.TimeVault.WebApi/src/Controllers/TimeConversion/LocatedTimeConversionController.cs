@@ -68,16 +68,44 @@ public class LocatedTimeConversionController : ControllerBase
         var input = model.ToInput();
         var result = await _locatedTimeConversionService.ConvertTimeAsync(input);
 
+        if (result.OriginTimeZone is null)
+        {
+            return Problem(
+                detail: $"No time zone found for origin location {model.OriginLocation}.",
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Time zone not found"
+            );
+        }
+
+        if (result.TargetTimeZone is null)
+        {
+            return Problem(
+                detail: $"No time zone found for target location {model.TargetLocation}.",
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Time zone not found"
+            );
+        }
+
+        if (result.ConvertedTime == null)
+        {
+            return Problem(
+                detail: $"Could not convert time from {result.OriginTimeZone.Id} to {result.TargetTimeZone.Id}.",
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Time conversion failed"
+            );
+        }
+
         var response = new LocatedTimeConversionResponse
         {
-            ConvertedTime = result.ConvertedTime,
+            // It is safe to access the Value property here because the null check was done above.
+            ConvertedTime = result.ConvertedTime.Value,
             ConvertedTimeFormat = model.ConvertedTimeFormat,
             OriginTime = result.OriginTime,
             OriginTimeFormat = model.OriginResponseTimeFormat,
             OriginTimeZone = result.OriginTimeZone,
             TargetTimeZone = result.TargetTimeZone,
-            OriginLocation = model.OriginLocation,
-            TargetLocation = model.TargetLocation,
+            OriginLocation = result.OriginLocation,
+            TargetLocation = result.TargetLocation
         };
 
         return Ok(response.ToDto());

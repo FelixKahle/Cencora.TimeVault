@@ -12,7 +12,7 @@ public readonly struct TimeConversionResult
     /// <summary>
     /// Gets or sets the converted time.
     /// </summary>
-    public required DateTime ConvertedTime { get; init; }
+    public required DateTime? ConvertedTime { get; init; }
 
     /// <summary>
     /// Gets or sets the origin time.

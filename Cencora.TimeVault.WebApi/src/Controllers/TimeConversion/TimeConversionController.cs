@@ -62,10 +62,20 @@ public class TimeConversionController : ControllerBase
         var model = request.ToModel();
         var input = model.ToInput();
         var result = await _timeConversionService.ConvertTimeAsync(input);
+
+        if (result.ConvertedTime is null)
+        {
+            return Problem(
+                title: "Time conversion failed",
+                detail: $"Time conversion failed for {input}",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
         
         var response = new TimeConversionResponse
         {
-            ConvertedTime = result.ConvertedTime,
+            // Safe to access because we checked for null above
+            ConvertedTime = result.ConvertedTime.Value,
             ConvertedTimeFormat = model.ConvertedTimeFormat,
             OriginTime = result.OriginTime,
             OriginTimeFormat = model.OriginResponseTimeFormat,

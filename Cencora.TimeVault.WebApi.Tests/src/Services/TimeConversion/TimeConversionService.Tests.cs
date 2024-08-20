@@ -57,8 +57,8 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
 
         var result = await service.ConvertTimeAsync(input);
 
-        Assert.Equal(DateTime.Now, result.ConvertedTime, Toleration);
-        Assert.Equal(input.OriginTime, result.ConvertedTime, Toleration);
+        Assert.Equal(DateTime.Now, result.ConvertedTime!.Value, Toleration);
+        Assert.Equal(input.OriginTime, result.ConvertedTime!.Value, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
         Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
@@ -100,7 +100,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         var result = await service.ConvertTimeAsync(input);
 
         Assert.Equal(originalTime, result.OriginTime, Toleration);
-        Assert.Equal(expectedTime, result.ConvertedTime, Toleration);
+        Assert.Equal(expectedTime, result.ConvertedTime!.Value, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
         Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);
@@ -126,7 +126,7 @@ public class TimeConversionServiceTests : TestLoggerBase<TimeConversionService>
         var result = await service.ConvertTimeAsync(input);
 
         Assert.Equal(originTime, result.OriginTime, Toleration);
-        Assert.Equal(expectedTime, result.ConvertedTime, Toleration);
+        Assert.Equal(expectedTime, result.ConvertedTime!.Value, Toleration);
         Assert.Equal(input.OriginTime, result.OriginTime, Toleration);
         Assert.Equal(input.OriginTimeZone, result.OriginTimeZone);
         Assert.Equal(input.TargetTimeZone, result.TargetTimeZone);

@@ -42,20 +42,38 @@ public class TimeConversionService : ITimeConversionService
         var originTimeZone = input.OriginTimeZone;
         var targetTimeZone = input.TargetTimeZone;
 
-        var originDateTime = DateTime.SpecifyKind(time, DateTimeKind.Unspecified);
-        var convertedTime = TimeZoneInfo.ConvertTime(originDateTime, originTimeZone, targetTimeZone);
-
-        var result = new TimeConversionResult
+        try
         {
-            ConvertedTime = convertedTime,
-            OriginTime = time,
-            OriginTimeZone = originTimeZone,
-            TargetTimeZone = targetTimeZone
-        };
+            var originDateTime = DateTime.SpecifyKind(time, DateTimeKind.Unspecified);
+            var convertedTime = TimeZoneInfo.ConvertTime(originDateTime, originTimeZone, targetTimeZone);
 
-        // Log some arbitrary information about the conversion.
-        _logger.LogInformation("Converted: {result}", result);
+            var result = new TimeConversionResult
+            {
+                ConvertedTime = convertedTime,
+                OriginTime = time,
+                OriginTimeZone = originTimeZone,
+                TargetTimeZone = targetTimeZone
+            };
+            
+            // Log some arbitrary information
+            _logger.LogInformation("Converted {result}", result);
 
-        return Task.FromResult(result);
+            return Task.FromResult(result);
+        }
+        catch (Exception ex)
+        {
+            var result = new TimeConversionResult
+            {
+                ConvertedTime = null,
+                OriginTime = time,
+                OriginTimeZone = originTimeZone,
+                TargetTimeZone = targetTimeZone,
+            };
+
+            // Log the error
+            _logger.LogError(ex, "Failed to convert {result}", result);
+
+            return Task.FromResult(result);
+        }
     }
 }

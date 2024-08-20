@@ -33,8 +33,41 @@ public class LocatedTimeConversionService : ILocatedTimeConversionService
     }
 
     /// <inheritdoc/>
-    public Task<LocatedTimeConversionResult> ConvertTimeAsync(LocatedTimeConversionInput input)
+    public async Task<LocatedTimeConversionResult> ConvertTimeAsync(LocatedTimeConversionInput input)
     {
-        throw new NotImplementedException();
+        var originTimeZoneResult = await _timeZoneService.SearchTimeZoneAsync(input.OriginLocation);
+        var targetTimeZoneResult = await _timeZoneService.SearchTimeZoneAsync(input.TargetLocation);
+
+        if (originTimeZoneResult.TimeZone is null || targetTimeZoneResult.TimeZone is null)
+        {
+            return new LocatedTimeConversionResult
+            {
+                ConvertedTime = null,
+                OriginTime = input.OriginTime,
+                OriginTimeZone = originTimeZoneResult.TimeZone,
+                TargetTimeZone = targetTimeZoneResult.TimeZone,
+                OriginLocation = input.OriginLocation,
+                TargetLocation = input.TargetLocation
+            };
+        }
+
+        var convertTimeInput = new TimeConversionInput
+        {
+            OriginTime = input.OriginTime,
+            OriginTimeZone = originTimeZoneResult.TimeZone,
+            TargetTimeZone = targetTimeZoneResult.TimeZone
+        };
+
+        var convertedTime = await _timeConversionService.ConvertTimeAsync(convertTimeInput);
+
+        return new LocatedTimeConversionResult
+        {
+            ConvertedTime = convertedTime.ConvertedTime,
+            OriginTime = input.OriginTime,
+            OriginTimeZone = originTimeZoneResult.TimeZone,
+            TargetTimeZone = targetTimeZoneResult.TimeZone,
+            OriginLocation = input.OriginLocation,
+            TargetLocation = input.TargetLocation
+        };
     }
 }
