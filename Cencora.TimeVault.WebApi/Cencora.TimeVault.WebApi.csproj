@@ -6,6 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Cencora.TimeVault.WebApi-5977B45D-34E5-4BD5-9BBB-69267C445A0C</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <WarningsAsErrors>1574</WarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>

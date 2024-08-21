@@ -27,8 +27,8 @@ public class LocatedTimeConversionController : ControllerBase
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="locatedTimeConversionService"/> is <see langword="null"/>.</exception>
     public LocatedTimeConversionController(ILocatedTimeConversionService locatedTimeConversionService)
     {
-        ArgumentNullException.ThrowIfNull(locatedTimeConversionService,
-            nameof(locatedTimeConversionService));
+        ArgumentNullException.ThrowIfNull(locatedTimeConversionService, nameof(locatedTimeConversionService));
+        
         _locatedTimeConversionService = locatedTimeConversionService;
     }
 

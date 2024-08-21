@@ -23,14 +23,18 @@ public class TimeConversionController : ControllerBase
     /// Initializes a new instance of the <see cref="TimeConversionController"/> class.
     /// </summary>
     /// <param name="timeConversionService">The time conversion service.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="timeConversionService"/> is <see langword="null"/>.</exception>
+    /// /// <exception cref="ArgumentNullException">Thrown if <paramref name="timeConversionService"/> is <see langword="null"/>.</exception>
     public TimeConversionController(ITimeConversionService timeConversionService)
     {
-        ArgumentNullException.ThrowIfNull(timeConversionService,
-            nameof(timeConversionService));
+        ArgumentNullException.ThrowIfNull(timeConversionService, nameof(timeConversionService));
+
         _timeConversionService = timeConversionService;
     }
 
+    /// <summary>
+    /// Converts a time from one time zone to another.
+    /// </summary>
+    /// <param name="request">The request containing the time to convert.</param>
     [HttpGet]
     [Consumes("application/json")]
     [Route("timezone")]
