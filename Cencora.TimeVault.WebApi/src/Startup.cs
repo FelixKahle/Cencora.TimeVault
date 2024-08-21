@@ -36,13 +36,9 @@ public sealed class Startup
         // Add services
         services.AddGlobalExceptionHandler();
         services.AddCustomLogging();
-        services.AddControllers(options =>
-        {
-            // We want to add a route prefix to all controllers.
-            options.Conventions.Add(new RoutePrefixConvention("api/v1"));
-        });
+        services.AddCustomControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddCustomSwaggerGen();
 
         // TimeVault services
         services.AddTimeZone();
@@ -65,7 +61,7 @@ public sealed class Startup
 
         if (env.IsDevelopment())
         {
-            //app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
         }

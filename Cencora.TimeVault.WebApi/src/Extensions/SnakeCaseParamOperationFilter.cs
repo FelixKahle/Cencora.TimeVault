@@ -19,6 +19,9 @@ public class SnakeCaseParamOperationFilter : IOperationFilter
     /// <param name="context">The context of the operation filter.</param>
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
+        ArgumentNullException.ThrowIfNull(operation, nameof(operation));
+        ArgumentNullException.ThrowIfNull(context, nameof(context));
+
         if (operation.Parameters == null)
         {
             operation.Parameters = [];

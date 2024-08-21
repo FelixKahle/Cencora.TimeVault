@@ -105,6 +105,27 @@ public static class ServiceCollectionExtensions
                 context.ProblemDetails.Extensions.TryAdd("traceId", context.HttpContext.TraceIdentifier);
             };
         });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds custom controllers to the application.
+    /// </summary>
+    /// <param name="services">The collection of services to configure.</param>
+    /// <returns>The collection of services.</returns>
+    /// <remarks>
+    /// This method adds a custom <see cref="SnakeCaseQueryValueProviderFactory"/> to the list of value provider factories
+    /// and configures the controllers to use the route prefix "api/v1".
+    /// </remarks>
+    public static IServiceCollection AddCustomControllers(this IServiceCollection services)
+    {
+        services.AddControllers(options =>
+        {
+            options.Conventions.Add(new RoutePrefixConvention("api/v1"));
+            options.ValueProviderFactories.Add(new SnakeCaseQueryValueProviderFactory());
+        });
+
         return services;
     }
 }
