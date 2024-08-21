@@ -15,7 +15,7 @@ namespace Cencora.TimeVault.WebApi.Controllers.TimeConversion;
 /// Controller for time conversion based on the location of the origin and target.
 /// </summary>
 [ApiController]
-[Route("time/conversion")]
+[Route("time/conversion/location")]
 public class LocatedTimeConversionController : ControllerBase
 {
     private readonly ILocatedTimeConversionService _locatedTimeConversionService;
@@ -39,7 +39,6 @@ public class LocatedTimeConversionController : ControllerBase
     /// <returns>The converted time.</returns>
     [HttpGet]
     [Consumes("application/json")]
-    [Route("location")]
     public async Task<IActionResult> GetLocatedConvertTime([FromQuery] LocatedTimeConversionRequestDto request)
     {
         return await HandleRequest(request);
@@ -52,7 +51,6 @@ public class LocatedTimeConversionController : ControllerBase
     /// <returns>The converted time.</returns>
     [HttpPost]
     [Consumes("application/json")]
-    [Route("location")]
     public async Task<IActionResult> PostLocatedConvertTime([FromBody] LocatedTimeConversionRequestDto request)
     {
         return await HandleRequest(request);

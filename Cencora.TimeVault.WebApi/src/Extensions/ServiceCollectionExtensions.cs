@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
                 Title = "TimeVault API",
                 Version = "v1",
                 Description = 
-                    @"Timevault is a service tailored to store, 
+                    @"TimeVault is a service tailored to store, 
                     manage, and retrieve timezone data for specific locations or 
                     geographical coordinates. By leveraging this service, applications 
                     can seamlessly perform accurate time translations between various timezones, 

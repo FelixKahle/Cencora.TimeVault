@@ -61,7 +61,7 @@ public class LocatedTimeConversionService : ILocatedTimeConversionService
                                 {
                                     ConvertedTime = result,
                                     OriginTimeZone = originTimeZone,
-                                    TargetTimeZone = targetTimeZone,
+                                    TargetTimeZone = targetTimeZone
                                 };
 
                                 return locatedTimeConversionResult;

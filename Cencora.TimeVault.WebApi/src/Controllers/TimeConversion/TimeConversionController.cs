@@ -14,7 +14,7 @@ namespace Cencora.TimeVault.WebApi.Controllers.TimeConversion;
 /// Controller for time conversion.
 /// </summary>
 [ApiController]
-[Route("time/conversion")]
+[Route("time/conversion/timezone")]
 public class TimeConversionController : ControllerBase
 {
     private readonly ITimeConversionService _timeConversionService;
@@ -37,7 +37,6 @@ public class TimeConversionController : ControllerBase
     /// <param name="request">The request containing the time to convert.</param>
     [HttpGet]
     [Consumes("application/json")]
-    [Route("timezone")]
     public async Task<IActionResult> GetConvertTime([FromQuery] TimeConversionRequestDto request)
     {
         return await HandleRequest(request);
@@ -50,7 +49,6 @@ public class TimeConversionController : ControllerBase
     /// <returns>The converted time.</returns>
     [HttpPost]
     [Consumes("application/json")]
-    [Route("timezone")]
     public async Task<IActionResult> PostConvertTime([FromBody] TimeConversionRequestDto request)
     {
         return await HandleRequest(request);

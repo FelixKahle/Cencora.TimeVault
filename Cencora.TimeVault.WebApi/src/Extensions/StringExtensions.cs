@@ -62,7 +62,7 @@ public static class StringExtensions
             return str;
         }
 
-        var snakeCase = Regex.Replace(str, @"([a-z0-9])([A-Z])", "$1_$2").ToLower();
+        var snakeCase = Regex.Replace(str, "([a-z0-9])([A-Z])", "$1_$2").ToLower();
         return snakeCase;
     }
 
