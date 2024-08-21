@@ -18,14 +18,19 @@ public class RoutePrefixConvention : IApplicationModelConvention
     /// Initializes a new instance of the <see cref="RoutePrefixConvention"/> class.
     /// </summary>
     /// <param name="prefix">The route prefix.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="prefix"/> is <see langword="null"/>.</exception>
     public RoutePrefixConvention(string prefix)
     {
+        ArgumentNullException.ThrowIfNull(prefix, nameof(prefix));
+
         _routePrefix = new AttributeRouteModel(new RouteAttribute(prefix));
     }
 
     /// <inheritdoc/>
     public void Apply(ApplicationModel application)
     {
+        ArgumentNullException.ThrowIfNull(application, nameof(application));
+
         foreach (var controller in application.Controllers)
         foreach (var selector in controller.Selectors)
             selector.AttributeRouteModel = selector.AttributeRouteModel != null

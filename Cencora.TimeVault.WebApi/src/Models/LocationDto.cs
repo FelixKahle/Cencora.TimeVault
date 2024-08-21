@@ -50,9 +50,14 @@ public record LocationDto : IValidatableObject
     /// <inheritdoc/>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (string.IsNullOrWhiteSpace(City)) yield return new ValidationResult("The city is required.", [nameof(City)]);
+        if (string.IsNullOrWhiteSpace(City))
+        {
+            yield return new ValidationResult("The city is required.", [nameof(City)]);
+        }
 
         if (string.IsNullOrWhiteSpace(Country))
-            yield return new ValidationResult("The country is required.", [nameof(Country)]);
+        {
+            yield return new ValidationResult("The country is required.", [nameof(Country)]);   
+        }
     }
 }

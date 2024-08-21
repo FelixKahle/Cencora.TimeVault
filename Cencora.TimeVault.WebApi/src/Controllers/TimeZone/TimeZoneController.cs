@@ -75,7 +75,7 @@ public class TimeZoneController : ControllerBase
 
                 return Ok(response.ToDto());
             },
-            Fail: error => CreateProblem(error)
+            Fail: CreateProblem
         );
     }
 

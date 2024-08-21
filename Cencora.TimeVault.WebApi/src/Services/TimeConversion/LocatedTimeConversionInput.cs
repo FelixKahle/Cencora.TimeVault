@@ -6,6 +6,9 @@ using Cencora.TimeVault.WebApi.Models;
 
 namespace Cencora.TimeVault.WebApi.Services.TimeConversion;
 
+/// <summary>
+/// Represents the input for a time conversion operation with locations.
+/// </summary>
 public readonly struct LocatedTimeConversionInput
 {
     /// <summary>

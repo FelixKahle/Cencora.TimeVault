@@ -57,12 +57,22 @@ public static class StringExtensions
     /// <returns>The string in snake case.</returns>
     public static string ToSnakeCase(this string str)
     {
-        if (string.IsNullOrEmpty(str))
+        if (string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str))
         {
             return str;
         }
 
         var snakeCase = Regex.Replace(str, @"([a-z0-9])([A-Z])", "$1_$2").ToLower();
         return snakeCase;
+    }
+
+    /// <summary>
+    /// Removes all new lines from the specified string.
+    /// </summary>
+    /// <param name="str">The string to process.</param>
+    /// <returns>The string with all new lines removed.</returns>
+    public static string RemoveNewLines(this string str)
+    {
+        return str.Replace(Environment.NewLine, "");
     }
 }

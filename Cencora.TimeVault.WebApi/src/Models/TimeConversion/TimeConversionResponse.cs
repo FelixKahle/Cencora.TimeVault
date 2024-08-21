@@ -42,7 +42,6 @@ public readonly struct TimeConversionResponse
     /// <inheritdoc/>
     public override string ToString()
     {
-        return
-            $"{OriginTime}({OriginTimeFormat}) {OriginTimeZone.Id} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetTimeZone.Id}";
+        return $"{OriginTime}({OriginTimeFormat}) {OriginTimeZone.Id} -> {ConvertedTime}({ConvertedTimeFormat}) {TargetTimeZone.Id}";
     }
 }

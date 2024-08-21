@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
     /// </remarks>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <returns>The <see cref="IServiceCollection"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is <see langword="null"/>.</exception>
     public static IServiceCollection AddTimeConversion(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services, nameof(services));

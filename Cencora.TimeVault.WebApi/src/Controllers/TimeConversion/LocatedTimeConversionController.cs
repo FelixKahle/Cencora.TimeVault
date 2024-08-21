@@ -87,7 +87,7 @@ public class LocatedTimeConversionController : ControllerBase
 
                 return Ok(response.ToDto());
             },
-            Fail: error => CreateProblem(error)
+            Fail: CreateProblem
         );
     }
 

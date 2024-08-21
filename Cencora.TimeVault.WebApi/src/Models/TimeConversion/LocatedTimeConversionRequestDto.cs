@@ -79,26 +79,37 @@ public record LocatedTimeConversionRequestDto : IValidatableObject
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (string.IsNullOrWhiteSpace(OriginTime))
+        {
             yield return new ValidationResult("The origin time is required.", [nameof(OriginTime)]);
+        }
         if (string.IsNullOrWhiteSpace(OriginTimeFormat))
+        {
             yield return new ValidationResult("The origin time format is required.", [nameof(OriginTimeFormat)]);
+        }
 
         if (string.IsNullOrWhiteSpace(ConvertedTimeFormat))
+        {
             yield return new ValidationResult("The converted time format is required.", [nameof(ConvertedTimeFormat)]);
+        }
 
         // Validate the time formats.
         if (OriginTimeFormat.IsValidDateTimeFormat() == false)
-            yield return new ValidationResult("The origin time format is not valid.", [nameof(OriginTimeFormat)]);
+        {
+            yield return new ValidationResult("The origin time format is not valid.", [nameof(OriginTimeFormat)]);   
+        }
         if (ConvertedTimeFormat.IsValidDateTimeFormat() == false)
+        {
             yield return new ValidationResult("The converted time format is not valid.", [nameof(ConvertedTimeFormat)]);
+        }
         if (OriginResponseTimeFormat.IsValidDateTimeFormat() == false)
-            yield return new ValidationResult("The origin response time format is not valid.",
-                [nameof(OriginResponseTimeFormat)]);
+        {
+            yield return new ValidationResult("The origin response time format is not valid.", [nameof(OriginResponseTimeFormat)]);
+        }
 
         // Check we can the origin time using the origin time format.
-        if (DateTime.TryParseExact(OriginTime, OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                out _) == false)
-            yield return new ValidationResult($"The origin time is not in the specified format: {OriginTimeFormat}.",
-                [nameof(OriginTime)]);
+        if (DateTime.TryParseExact(OriginTime, OriginTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _) == false)
+        {
+            yield return new ValidationResult($"The origin time is not in the specified format: {OriginTimeFormat}.", [nameof(OriginTime)]);
+        }
     }
 }

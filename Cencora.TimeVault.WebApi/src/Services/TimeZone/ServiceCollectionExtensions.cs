@@ -19,7 +19,6 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services, nameof(services));
 
         services.AddTransient<ITimeZoneService, TimeZoneService>();
-
         return services;
     }
 }
