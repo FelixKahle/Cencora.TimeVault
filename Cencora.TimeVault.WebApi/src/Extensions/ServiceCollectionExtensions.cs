@@ -11,9 +11,15 @@ namespace Cencora.TimeVault.WebApi.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="IServiceCollection"/>.
+/// Made specifically for the TimeVault API.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// The version of the API.
+    /// </summary>
+    public const string Version = "v1";
+
     /// <summary>
     /// Adds custom logging configuration to the application.
     /// </summary>
@@ -44,10 +50,10 @@ public static class ServiceCollectionExtensions
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo 
+            options.SwaggerDoc(Version, new OpenApiInfo 
             { 
                 Title = "TimeVault API",
-                Version = "v1",
+                Version = Version,
                 Description = 
                     @"TimeVault is a service tailored to store, 
                     manage, and retrieve timezone data for specific locations or 
@@ -147,7 +153,7 @@ public static class ServiceCollectionExtensions
 
         services.AddControllers(options =>
         {
-            options.Conventions.Add(new RoutePrefixConvention("api/v1"));
+            options.Conventions.Add(new RoutePrefixConvention($"api/{Version}"));
             options.ValueProviderFactories.Add(new SnakeCaseQueryValueProviderFactory());
         });
         return services;
